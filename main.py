@@ -4,7 +4,6 @@ import numpy as np
 
 import NeatCleaningModel as Clean
 import PlanMoundsModel as Mounds
-import RoomMechanics as Mech
 
 def main():
 
@@ -15,15 +14,15 @@ def main():
 
     model = Clean.Clean(room, mounds)
 
-    moves = []
+    # moves = []
 
-    while not Mech.is_clean(room):
+    # while not Mech.is_clean(room):
 
-        room, move = model.find_move(room)
+    #     room, move = model.find_move(room)
 
-        moves.append(move)
+    #     moves.append(move)
 
-    print(moves)
+    # print(moves)
 
 
 if __name__ == '__main__':
