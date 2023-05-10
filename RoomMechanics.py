@@ -1,7 +1,6 @@
 import numpy as np
 import configparser 
 import matplotlib.pyplot as plt
-from matplotlib.colors import ListedColormap
 
 import Utility
 
@@ -39,9 +38,43 @@ class RoomMechanics:
         plt.show()
 
     def move_broom(self, pos1: np.array, pos2: np.array):
-        
-        pass
+        """
+            Transport cells forward along the line L created by pos1, pos2.\n
+            Area of the broom is the rectangle such that the midpoints of its 2 sides with lengths 
 
+            >>> self.mBROOM_WIDTH
+
+            form a line coinciding with L.\n
+            See Readme for a more precise explanation. 
+        """
+        
+        # params of the line equation 
+        a, b, c = Utility.line_equation(pos1, pos2)
+
+        # angle of the line 
+        tilt = None
+        if   a == 0:
+            tilt = .0
+        elif b == 0:
+            tilt = np.pi/2
+        else: 
+            tilt = np.tan( -a/b )
+
+        # construct the rectangle/area of influence of the broom 
+
+        # vector from the middle of side of the rectangle to its left corner
+        half = Utility.rotate( np.array([self.mBROOM_WIDTH, 0]), 
+                               tilt + np.pi/2 )
+
+        corner_left_1  = pos1 + half 
+        corner_right_1 = pos1 - half
+
+        corner_left_2  = pos2 + half
+        corner_right_2 = pos2 - half
+
+        # TODO: find cells included in the rectangle
+
+        pass        
 
     def is_clean(self, room):
         """
@@ -57,4 +90,3 @@ class RoomMechanics:
                     return False
                 
         return True
-        
