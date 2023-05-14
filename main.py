@@ -7,7 +7,9 @@ import PlanMoundsModel as Mounds
 
 def main():
 
-    room = np.genfromtxt("premade-rooms/room1.csv", delimiter = ',')
+    # room = np.genfromtxt("premade-rooms/room1.csv", delimiter = ',')
+
+    room = np.random.rand(10, 10)
 
     # list of positions
     mounds = Mounds.PlanMounds(room)

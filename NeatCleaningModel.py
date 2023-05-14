@@ -6,11 +6,13 @@ class Clean:
 
     def __init__(self, room: np.array, mounds: np.array):
 
-        self.mRoom = room
+        self.room = room
 
         # list of positions
-        self.mMounds = mounds
+        self.mounds = mounds
 
-        self.mRoomMechanics = RM.RoomMechanics(room)
+        self.room_mechanics = RM.RoomMechanics(self.room)
 
-        self.mRoomMechanics.show_room()
+        self.room_mechanics.move_broom((5, 5), (7, 2))
+
+        self.room_mechanics.show_room()

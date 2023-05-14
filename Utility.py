@@ -14,7 +14,7 @@ def line_equation(pos1: np.array, pos2: np.array):
 
     # y = px + q
 
-    p = (x1 - x2) / (y1 - y2) 
+    p = (y1 - y2) / (x1 - x2) 
     q = y1 - p * x1
 
     return p, -1, q
@@ -27,13 +27,21 @@ def to_left(coeffs: tuple[float, float, float], pos: np.array):
     """
     a, b, c = coeffs
     x, y = pos
-    p = -c/b
-    q = -c/a
 
-    if a == 0: return y < p
-    if b == 0: return x < q
+    if a == 0: return y < -c/b
+    if b == 0: return x < -c/a
 
+    p = -a/b
+    q = -c/b
+
+    if p > 0: 
+        return y > p * x + q
     return y < p * x + q
+
+
+def to_left_points(pos1: np.array, pos2: np.array, pos: np.array):
+
+    return to_left( line_equation(pos1, pos2), pos )
 
 def rotate(pos: np.array, theta: float):
     """
@@ -47,5 +55,3 @@ def rotate(pos: np.array, theta: float):
                      [np.sin(theta),  np.cos(theta)]  ] )
 
     return np.dot(rot, pos)
-
-    
