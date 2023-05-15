@@ -4,12 +4,12 @@ import numpy as np
 
 import NeatCleaningModel as Clean
 import PlanMoundsModel as Mounds
+import RoomGeneration as Room
 
 def main():
 
     # room = np.genfromtxt("premade-rooms/room1.csv", delimiter = ',')
-
-    room = np.random.rand(10, 10)
+    room = Room.generate_room((75, 150))
 
     # list of positions
     mounds = Mounds.PlanMounds(room)
