@@ -9,7 +9,7 @@ import RoomGeneration as Room
 def main():
 
     # room = np.genfromtxt("premade-rooms/room1.csv", delimiter = ',')
-    room = Room.generate_room((75, 150))
+    room = Room.generate_room((100, 150)) # height: 100, width: 150
 
     # list of positions
     mounds = Mounds.PlanMounds(room)
