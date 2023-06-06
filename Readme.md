@@ -1,4 +1,3 @@
-This repository was made to document a group project under the supervision of Silesian Politechnic. 
 
 The deeper application of this project is to see if during a process of collective displacement of objects (randomly arranged in the beginning) it is optimal to centralise piles or rather diversify it into making smaller heaps in seperate sub-rooms. Another theoretical application is to compare the results returned by the algorithm - which describe how to plan moving dirt around - to what existing clustering algorithms return. 
 
@@ -22,3 +21,8 @@ If the capacity of the broom is exceeded we create two side rectangles and split
 ![clean optim figure 2](https://github.com/gournge/cleaning-optimization/assets/81859727/dc02cb13-4e7a-4e18-9ef2-92097dc7b6fc)
 
 Moving dirt to a rectangle means randomly distributing it in 
+
+- - -
+
+This repository was made to document a group project under the supervision of Silesian Politechnic. 
+
