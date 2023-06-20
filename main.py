@@ -8,13 +8,16 @@ import RoomGeneration as Room
 
 def main():
 
-    # room = np.genfromtxt("premade-rooms/room1.csv", delimiter = ',')
-    room = Room.generate_room((75, 150))
+    room = np.genfromtxt("premade-rooms/room2.csv", delimiter = ',')
+    # room = Room.generate_room((64, 64))
+    # room = np.random.rand(35, 35)
 
     # list of positions
     mounds = Mounds.PlanMounds(room)
 
     model = Clean.Clean(room, mounds)
+
+    
 
     # moves = []
 

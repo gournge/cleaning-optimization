@@ -13,6 +13,8 @@ class Clean:
 
         self.room_mechanics = RM.RoomMechanics(self.room)
 
-        self.room_mechanics.move_broom((5, 5), (7, 2))
+        self.room_mechanics.show_room()
+
+        self.room_mechanics.move_broom((9, 25), (15, 35))
 
         self.room_mechanics.show_room()

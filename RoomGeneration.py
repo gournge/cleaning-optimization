@@ -41,11 +41,11 @@ def generate_room(shape: tuple[int, int]):
 
     
     # TODO: warped grid with randomly deleted edges
-    cmap = plt.cm.get_cmap('gray') # type: ignore # grayscale
-    cmap.set_over((0, 0.8, 1)) # specific value for walls (value 2)
+    # cmap = plt.cm.get_cmap('gray') # type: ignore # grayscale
+    # cmap.set_over((0, 0.8, 1)) # specific value for walls (value 2)
     
 
-    plt.imshow(room, cmap=cmap, vmin=0, vmax=1)
-    plt.axis('off')
-    plt.show()
+    # plt.imshow(room, cmap=cmap, vmin=0, vmax=1)
+    # plt.axis('off')
+    # plt.show()
     return room
