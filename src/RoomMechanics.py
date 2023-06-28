@@ -16,7 +16,7 @@ class RoomMechanics:
         - Rects (rectangles) are lists of points
     """
 
-    def __init__(self, room: np.array):
+    def __init__(self, room: np.array, mounds: np.array):
         """
             toolset for operating in a room 
         """
@@ -26,10 +26,12 @@ class RoomMechanics:
         self.room_width = len(room)
         self.room_height = len(room[0])
 
+        self.mounds = mounds
+
         # read the config file settings 
 
         config = configparser.ConfigParser()
-        config.read('config-cleaning-mechanics.ini')
+        config.read('../configs/config-cleaning-mechanics.ini')
 
 
         self.CLEAN_THRESHOLD = float( config['GENERAL']['clean_threshold'] ) 
@@ -94,8 +96,13 @@ class RoomMechanics:
 
             Returns:
             --------
-            - the amount of dirt that disappeared by accident (the alg couldn't have found space for it)
-            - `False` if the movement collided with a wall (had to be clipped) or was too short; `True` otherwise.
+            cleaned_dirt : float
+                Amount of dirt that has fallen down inside the imaginary holes at the spots of mounds.
+
+            spillover_dirt : float
+                the amount of dirt that disappeared by accident (the alg couldn't have found space for it)
+            collided : bool
+                `False` if the movement collided with a wall (had to be clipped) or was too short; `True` otherwise.
             
             Area of the broom is the rectangle such that the midpoints of its 2 sides with lengths 
 
@@ -109,8 +116,6 @@ class RoomMechanics:
         """
         
         if_corrected_forwards, if_corrected_sides = False, False
-
-        # rect_left, rect_right = None, None
 
         rect_front, rect_main, half, tilt = self.__create_pointing_forward(pos1, pos2)
 
@@ -138,8 +143,6 @@ class RoomMechanics:
 
             output_rects_points.extend( [self.__inside_points(r) for r in [rect_left, rect_right] ] )
         
-
-        
         for point in points_main:
             x, y = point
             if self.room[x, y] != 2:
@@ -161,9 +164,10 @@ class RoomMechanics:
             else: 
                 spillover_dirt += self.__distribute_dirt(residue_mass/2, output_points, points_redistribution)
 
-        self.show_room(list_of_rects=[rect_front, rect_main])
+        # actual cleaning
+        cleaned_dirt = self.__dirt_to_mounds()
 
-        return spillover_dirt, (if_corrected_forwards or if_corrected_sides)
+        return cleaned_dirt, spillover_dirt, (if_corrected_forwards or if_corrected_sides)
 
     def __inside_points(self, corners):
         """
@@ -217,6 +221,7 @@ class RoomMechanics:
             - pos1, pos2 are np.array 2d vectors
 
             Returns: 
+            -------
             - list of vertices of front rect
             - list of vertices of main rect
             - vector from pos1 to left vertex 
@@ -502,6 +507,26 @@ class RoomMechanics:
 
         # if after redistribution there are any leftovers
         return amount_of_dirt
+
+    def __dirt_to_mounds(self):
+        """
+            Iterates through all mounds and deletes the dirt at their positions
+            
+            Returns
+            -------
+            deleted_dirt : float
+                How much dirt was erased from the grid
+
+        """
+
+        deleted_dirt = 0
+        for mound in self.mounds:
+            x, y = mound
+            val = self.room[x, y]
+            if val == 2: continue
+            self.room[x, y] = 0
+            deleted_dirt += val 
+        return deleted_dirt
 
     def is_valid(self, point):
         x, y = point
