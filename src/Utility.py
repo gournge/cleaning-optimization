@@ -1,4 +1,64 @@
 import numpy as np
+import tensorflow as tf
+
+def preprocess(room: np.array, mounds) -> tf.Tensor:
+    """Converts two `np.array`s of size NxN to a representation through a tensor object of dimensions NxNx3 
+    
+    Arguments:
+    ---------
+    - `np.array` room with walls of value 2 and dirt of value between 0 and 1
+    - `np.array` array of 2d positions in the room where mounds are
+    
+    Returns:
+    --------
+    - `tf.Tensor`
+
+    """
+
+    d = room.shape[0]
+    assert d == room.shape[1], "Preprocesses only square rooms"
+
+    out = tf.zeros((d, d, 3), tf.float32)
+
+    for r, row in enumerate(room):
+        for c, el in enumerate(row):
+            
+            if el == 2: 
+                out[r][c][1] = 1.
+            else:
+                out[r][c][0] = el
+
+    for mound in mounds:
+        x, y = mound
+        out[x][y][2] = 1. 
+    
+    return out
+
+def amount_of_dirt(room: np.array, mounds):
+    """
+    Arguments:
+    ---------
+    - room with dirt
+    - mounds plan
+    
+    Returns:
+    -------
+    - float
+    
+    """
+
+    out = 0
+    d = room.shape[0]
+
+    for x in range(d):
+        for y in range(d):
+
+            if (x, y) in mounds: continue
+            out += room[x, y]
+
+    return out
+            
+
 
 def discard_to_left(points, line, bottom = True):
     """

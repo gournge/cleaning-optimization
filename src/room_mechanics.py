@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from shapely.geometry import Point
 from shapely.geometry.polygon import Polygon
 
-import Utility
+from src import utility
 
 class RoomMechanics:
     """
@@ -31,7 +31,7 @@ class RoomMechanics:
         # read the config file settings 
 
         config = configparser.ConfigParser()
-        config.read('../configs/config-cleaning-mechanics.ini')
+        config.read('../config.ini')
 
 
         self.CLEAN_THRESHOLD = float( config['GENERAL']['clean_threshold'] ) 
@@ -68,7 +68,7 @@ class RoomMechanics:
         plt.imshow(new_room, cmap=cmap, vmin=0, vmax=1)
         
         for rect in list_of_rects:
-            rect = Utility.create_list_of_sides(rect)
+            rect = utility.create_list_of_sides(rect)
             for side in rect:
                 plt.plot([ side[0][0], side[1][0] ], [side[0][1], side[1][1]])
 
@@ -151,9 +151,9 @@ class RoomMechanics:
         points_redistribution = None
         if point_of_exceeded_capacity is not None:
             facing_downward_rect_main = (rect_main[0][1] > rect_main[2][1])
-            beg_line = Utility.line_equation(rect_main[0], rect_main[1])
-            discard_line = Utility.parallel_through(beg_line, point_of_exceeded_capacity)
-            points_redistribution = Utility.discard_to_left(points_main, discard_line, bottom = facing_downward_rect_main)
+            beg_line = utility.line_equation(rect_main[0], rect_main[1])
+            discard_line = utility.parallel_through(beg_line, point_of_exceeded_capacity)
+            points_redistribution = utility.discard_to_left(points_main, discard_line, bottom = facing_downward_rect_main)
         else:
             points_redistribution = points_main
 
@@ -232,7 +232,7 @@ class RoomMechanics:
             rect_main = []
 
             # params of the line equation 
-            a, b, c = Utility.line_equation(pos1, pos2)
+            a, b, c = utility.line_equation(pos1, pos2)
 
             # angle of the line 
             tilt = None
@@ -244,7 +244,7 @@ class RoomMechanics:
                 tilt = np.arctan(-a/b)
 
             # vector from the middle of side of the rectangle to its left corner
-            half = Utility.rotate( np.array([self.BROOM_WIDTH/2, 0]), 
+            half = utility.rotate( np.array([self.BROOM_WIDTH/2, 0]), 
                                 tilt + np.pi/2 )
             
             rect_main.append(pos1 + half) 
@@ -262,9 +262,9 @@ class RoomMechanics:
             if self.BROOM_IMPACT_IS_RELATIVE:
                 whole_movement_length = np.linalg.norm(pos1 - pos2)
                 extension_vector_length = self.BROOM_IMPACT_RELATIVE_FRONT * whole_movement_length
-                extension_vector = Utility.rotate(np.array([extension_vector_length, 0]), tilt)
+                extension_vector = utility.rotate(np.array([extension_vector_length, 0]), tilt)
             else:
-                extension_vector = Utility.rotate(np.array([self.BROOM_IMPACT_ABSOLUTE_FRONT, 0]), tilt)
+                extension_vector = utility.rotate(np.array([self.BROOM_IMPACT_ABSOLUTE_FRONT, 0]), tilt)
 
             new_left  = rect_main[2]  + extension_vector
             new_right = rect_main[3] + extension_vector 
@@ -307,14 +307,14 @@ class RoomMechanics:
             return False, rect_main, rect_front, False
         
         b1, b2 = rect_main[0], rect_main[1]
-        collision_point = min( collision_points, key = (lambda p: Utility.dist_point_to_line(p, b1, b2)) )
+        collision_point = min( collision_points, key = (lambda p: utility.dist_point_to_line(p, b1, b2)) )
 
-        dist_collision_to_front = np.linalg.norm(rect_main[0] - rect_front[3]) - Utility.dist_point_to_line(collision_point, rect_main[0], rect_main[1])
+        dist_collision_to_front = np.linalg.norm(rect_main[0] - rect_front[3]) - utility.dist_point_to_line(collision_point, rect_main[0], rect_main[1])
 
         if dist_collision_to_front < self.BROOM_MOVEMENT_LENGTH_RANGE[0]: 
             return False, None, None, True
 
-        vec = Utility.rotate([dist_collision_to_front, 0], tilt)
+        vec = utility.rotate([dist_collision_to_front, 0], tilt)
 
         new_main_top_left  = rect_front[0] - vec
         new_main_top_right = rect_front[1] - vec
@@ -365,10 +365,10 @@ class RoomMechanics:
         
         """
 
-        side_extension = self.BROOM_IMPACT_RELATIVE_SIDE * (2 * half) if self.BROOM_IMPACT_IS_RELATIVE else Utility.rotate([self.BROOM_IMPACT_ABSOLUTE_SIDE, 0], np.pi/2 + tilt)
+        side_extension = self.BROOM_IMPACT_RELATIVE_SIDE * (2 * half) if self.BROOM_IMPACT_IS_RELATIVE else utility.rotate([self.BROOM_IMPACT_ABSOLUTE_SIDE, 0], np.pi/2 + tilt)
         
-        dist_critical_to_begin = Utility.dist_point_to_line(exceeded_capacity_point, rect_main[0], rect_main[1])
-        side_parallel_to_tilt = Utility.rotate([dist_critical_to_begin, 0], tilt)
+        dist_critical_to_begin = utility.dist_point_to_line(exceeded_capacity_point, rect_main[0], rect_main[1])
+        side_parallel_to_tilt = utility.rotate([dist_critical_to_begin, 0], tilt)
 
         # inside corners at bottom
         inside_left  = rect_main[0]  + side_parallel_to_tilt
@@ -420,17 +420,17 @@ class RoomMechanics:
         if (not collision_left) and (not collision_right):
             return False, rect_left, rect_right
 
-        closest_left  = None if not collision_left else min(collision_left, key = lambda p : Utility.dist_point_to_line(p, rect_left[1], rect_left[3]))
-        closest_right = None if not collision_right else min(collision_right, key = lambda p : Utility.dist_point_to_line(p, rect_right[0], rect_right[2]))
+        closest_left  = None if not collision_left else min(collision_left, key = lambda p : utility.dist_point_to_line(p, rect_left[1], rect_left[3]))
+        closest_right = None if not collision_right else min(collision_right, key = lambda p : utility.dist_point_to_line(p, rect_right[0], rect_right[2]))
             
-        d_l = Utility.dist_point_to_line(closest_left, rect_left[1], rect_left[3]) if closest_left is not None else None
-        d_r = Utility.dist_point_to_line(closest_right, rect_right[0], rect_right[2]) if closest_right is not None else None
+        d_l = utility.dist_point_to_line(closest_left, rect_left[1], rect_left[3]) if closest_left is not None else None
+        d_r = utility.dist_point_to_line(closest_right, rect_right[0], rect_right[2]) if closest_right is not None else None
 
 
         side_width = np.linalg.norm(rect_right[0] - rect_right[1])
 
-        vec_l = np.array([0, 0]) if d_l is None else Utility.rotate([side_width - d_l, 0], tilt - np.pi/2)
-        vec_r = np.array([0, 0]) if d_r is None else Utility.rotate([side_width - d_r, 0], tilt + np.pi/2)
+        vec_l = np.array([0, 0]) if d_l is None else utility.rotate([side_width - d_l, 0], tilt - np.pi/2)
+        vec_r = np.array([0, 0]) if d_r is None else utility.rotate([side_width - d_r, 0], tilt + np.pi/2)
 
         new_left  = [vec_l + rect_left[0],          rect_left[1], vec_l + rect_left[2],          rect_left[3]]
         new_right = [       rect_right[0], vec_r + rect_right[1],        rect_right[2], vec_r + rect_right[3]]
