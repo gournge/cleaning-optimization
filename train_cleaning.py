@@ -20,9 +20,11 @@ def get_args():
 
     config = configparser.ConfigParser()
     config.read("config.ini")
-    possible_sizes = config['GENERAL']['possible_sizes']
-    mounds_number = config["GENERAL"]['mounds_number']
+    possible_sizes = eval(config['GENERAL']['possible_sizes'])
+    print(possible_sizes)
 
+    mounds_number = int(config["GENERAL"]['mounds_number'])
+    
     parser = argparse.ArgumentParser("Train the cleaning agent")
 
     parser.add_argument("--learning_rate", type=float, default=1e-6)
@@ -30,7 +32,7 @@ def get_args():
     parser.add_argument("--initial_epsilon", type=float, default=0.1)
     parser.add_argument("--final_epsilon", type=float, default=1e-4)
 
-    parser.add_argument("--image_size",   type=int, default=32, choices=possible_sizes, help="The common width and height for all images")
+    parser.add_argument("--image_size",   type=int, default=32, choices=eval(possible_sizes), help="The common width and height for all images")
     parser.add_argument("--batch_size",   type=int, default=32, help="The number of images per batch")
     parser.add_argument("--num_episodes", type=int, default=100) # TODO: check default 
     parser.add_argument("--num_moves",    type=int, default=100, help="How many times does the algorithm generate a move") # TODO: check default 
@@ -56,7 +58,7 @@ def train(opts):
     else:
         torch.manual_seed(123)
 
-    agent = dql_clean_agent.DQLCleanAgent()
+    agent = dql_clean_agent.DQLCleanAgent(parser.image_size)
 
     # room layouts
     init_states = list( room_generation.generate_room(parser.image_size) for _ in range(parser.num_episodes) )
@@ -103,5 +105,4 @@ def train(opts):
 
 if __name__ == '__main__':
     opts = get_args()
-    print(opts)
     train(opts)

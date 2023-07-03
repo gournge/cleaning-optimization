@@ -9,17 +9,25 @@ from collections import deque
 
 from keras.callbacks import TensorBoard
 from keras.models import Sequential
-from keras.layers import Dense
 from keras.optimizers import Adam
+import keras.layers as layers
 
-class DQNAgent:
+class DQLCleanAgent:
 
-    def __init__(self, state_size, action_size):
+    def __init__(self, grid_size: int):
+        """
+        Args:
+        ----
+        - `int` grid size        
+        """
 
-        raise NotImplementedError
+        if grid_size not in [32, 64, 128]: 
+            raise NotImplementedError("No corresponding model architecture has been implemented")
 
-        self.state_size = state_size
-        self.action_size = action_size
+        self.grid_size = grid_size
+
+        self.state_size = grid_size * grid_size * 3
+        self.action_size = 4
         self.memory = deque(maxlen=2000)
 
         self.gamma = 0.95    # discount rate
@@ -33,11 +41,23 @@ class DQNAgent:
         
         # TODO: convolutional nn
 
+
+
         model = Sequential()
 
-        # model.add(Dense(24, input_dim=self.state_size, activation='relu'))
-        # model.add(Dense(24, activation='relu'))
-        # model.add(Dense(self.action_size, activation='linear'))
+        if self.grid_size == 32:
+            model.add(layers.Conv2D(input_shape=(32, 32, 3)))
+
+        elif self.grid_size == 64:
+            raise NotImplementedError("No corresponding model architecture has been implemented")
+        elif self.grid_size == 128:
+            raise NotImplementedError("No corresponding model architecture has been implemented")
+            
+
+
+        model.add(layers.Conv2D())
+
+
 
         model.compile(loss='mse',
                       optimizer=Adam(learning_rate=self.learning_rate))
