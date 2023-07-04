@@ -7,6 +7,8 @@ import numpy as np
 import random 
 from collections import deque
 
+import configparser
+
 from keras.callbacks import TensorBoard
 from keras.models import Sequential
 from keras.optimizers import Adam
@@ -21,16 +23,19 @@ class DQLCleanAgent:
         - `int` grid size        
         """
 
+        parser = configparser.ConfigParser()
+        parser.read("../config.ini")
+
         if grid_size not in [32, 64, 128]: 
             raise NotImplementedError("No corresponding model architecture has been implemented")
 
         self.grid_size = grid_size
 
-        self.state_size = grid_size * grid_size * 3
+        self.state_shape = (grid_size, grid_size, 3)
         self.action_size = 4
-        self.memory = deque(maxlen=2000)
+        self.memory = deque(maxlen = int(parser['AGENT']['memory']) )
 
-        self.gamma = 0.95    # discount rate
+        self.gamma = 0.95   # discount rate
         self.epsilon = 1.0  # exploration rate
         self.epsilon_min = 0.01
         self.epsilon_decay = 0.995
@@ -46,18 +51,27 @@ class DQLCleanAgent:
         model = Sequential()
 
         if self.grid_size == 32:
-            model.add(layers.Conv2D(input_shape=(32, 32, 3)))
+            
+            # `kernel` is a single little window that traverses through the 2d image
+            # since 2d image has 3 channels, for each channel we would have a different kernel
+            # `filter` is the vector of these kernels collectively
+
+            # filters increasing
+            # kernel decreasing
+
+            model.add(layers.Conv2D(filters=3,  kernel_size=24, activation='relu', input_shape = self.state_size))
+            model.add(layers.Conv2D(filters= ,  kernel_size=24, activation='relu', input_shape = self.state_size))
+            model.add(layers.Conv2D(filters=3,  kernel_size=24, activation='relu', input_shape = self.state_size))
+
+            # decreasing
+
+            model.add(layers.Dense(units= , activation='relu'))
+            model.add(layers.Dense(units=4, activation='relu'))
 
         elif self.grid_size == 64:
             raise NotImplementedError("No corresponding model architecture has been implemented")
         elif self.grid_size == 128:
             raise NotImplementedError("No corresponding model architecture has been implemented")
-            
-
-
-        model.add(layers.Conv2D())
-
-
 
         model.compile(loss='mse',
                       optimizer=Adam(learning_rate=self.learning_rate))

@@ -11,7 +11,7 @@ def preprocess(room: np.array, mounds) -> tf.Tensor:
     
     Returns:
     --------
-    - `tf.Tensor`
+    - `tf.Tensor` : [x][y][0] is for dirt, [x][y][1] is for walls, [x][y][2] is for mounds.
 
     """
 
