@@ -36,6 +36,7 @@ class DQLCleanAgent:
 
         self.grid_size = grid_size
 
+        # batch size
         self.state_shape = (grid_size, grid_size, 3)
         self.action_size = 4
         self.memory = deque(maxlen = memory)
@@ -51,8 +52,6 @@ class DQLCleanAgent:
         
         # TODO: convolutional nn
 
-
-
         model = Sequential()
 
         if self.grid_size == 32:
@@ -64,11 +63,13 @@ class DQLCleanAgent:
             # filters increasing
             # kernel decreasing
 
-            model.add(layers.Conv2D(filters=3,  kernel_size=24, activation='relu', input_shape = self.state_size))
-            model.add(layers.Conv2D(filters=24, kernel_size=12, activation='relu'))
-            model.add(layers.Conv2D(filters=48, kernel_size=8,  activation='relu'))
+            # kernel size chosen based on width of subrooms 
 
-            print(model.output_shape)
+            model.add(layers.Conv2D(filters=3,  kernel_size=15, activation='relu', input_shape = self.state_shape))
+            model.add(layers.Conv2D(filters=24, kernel_size=3, activation='relu'))
+            model.add(layers.Conv2D(filters=48, kernel_size=2,  activation='relu'))
+
+            print(model.summary())
 
             # decreasing
 

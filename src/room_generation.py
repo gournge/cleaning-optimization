@@ -1,7 +1,91 @@
 import numpy as np
 import matplotlib.pyplot as plt
+
+# dirt generation
 import opensimplex
-from perlin_noise import PerlinNoise
+import perlin_noise
+
+
+class RoomGenerator:
+
+    def __init__(self, room_size: str, subroom_size: str):
+        """
+        Args:
+            room_size: How big is the whole grid in the simulation.
+                       Can be either `'small'`, `'medium'`, or `'large'`
+
+            sub_room_size: How big are the subrooms.
+                           Can be either `'smaller'`, `'larger'`.
+
+        Returns:
+            `RoomGenerator` object with different generation methods
+
+        """
+        
+        room_sizes_dict = { 'small'  : (35,  (6, 9)), 
+                            'medium' : (71,  (7, 9)),
+                            'large'  : (119, (6, 10)) }
+
+        sub_room_sizes_list = ['smaller', 'larger']
+
+        if room_size not in room_sizes_dict.keys():
+            raise NotImplementedError("A room of such size cannot be generated")
+
+        if subroom_size not in sub_room_sizes_list:
+            raise NotImplementedError("A room with such subroom sizes cannot be generated")
+
+
+        sizes = room_sizes_dict[room_size]
+        smaller = (subroom_size == 'smaller')
+
+        self.room_size    = sizes[0]
+        self.subroom_size = sizes[1][0] if smaller else sizes[1][1]
+
+
+    def average_pooling_method(self):
+        """Generates random dirt and averages it out. 
+
+        Returns:
+            2d `np.array`        
+        
+        """
+
+        temp = self.__generate_walls()
+
+        # special case
+        if (self.room_size, self.subroom_size) == (35, 7):
+            pass
+
+        pass
+
+
+    def simplex_method(self):
+        """Generates random dirt based on simplex method
+
+        Returns:
+            2d `np.array`        
+        
+        """
+
+        temp = self.__generate_walls()
+
+        # special case
+        if (self.room_size, self.subroom_size) == (35, 7):
+            pass
+
+        pass
+
+    def __generate_walls(self):
+        """Private method
+
+        Returns:
+            2d `np.array` with value 2 where walls should be  
+        
+        """
+
+        pass
+        
+        
 
 def generate_room_method1(shape):
 
