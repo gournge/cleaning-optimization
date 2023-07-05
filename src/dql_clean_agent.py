@@ -8,6 +8,7 @@ import random
 from collections import deque
 
 import configparser
+from pathlib import Path # for path for configparser
 
 from keras.callbacks import TensorBoard
 from keras.models import Sequential
@@ -23,8 +24,20 @@ class DQLCleanAgent:
         - `int` grid size        
         """
 
-        parser = configparser.ConfigParser()
-        parser.read("../config.ini")
+        config = configparser.ConfigParser()
+        # parent_dir = Path(__file__).parent.absolute() 
+        # path_to_config = Path.joinpath(parent_dir, "config.cfg")
+        # print(path_to_config)
+
+        # config.read(path_to_config)
+        config.read(r"C:\Users\filip\OneDrive\Dokumenty\Pulpit\Filip - Laptop\cleaning-optimization\config.cfg")
+        # config.read(r"..\..\config.cfg")
+
+        print(config.sections())
+
+        print( len(config.items()) )
+
+        memory = int(config['AGENT']['memory']) 
 
         if grid_size not in [32, 64, 128]: 
             raise NotImplementedError("No corresponding model architecture has been implemented")
@@ -33,7 +46,7 @@ class DQLCleanAgent:
 
         self.state_shape = (grid_size, grid_size, 3)
         self.action_size = 4
-        self.memory = deque(maxlen = int(parser['AGENT']['memory']) )
+        self.memory = deque(maxlen = memory)
 
         self.gamma = 0.95   # discount rate
         self.epsilon = 1.0  # exploration rate
@@ -60,12 +73,14 @@ class DQLCleanAgent:
             # kernel decreasing
 
             model.add(layers.Conv2D(filters=3,  kernel_size=24, activation='relu', input_shape = self.state_size))
-            model.add(layers.Conv2D(filters= ,  kernel_size=24, activation='relu', input_shape = self.state_size))
-            model.add(layers.Conv2D(filters=3,  kernel_size=24, activation='relu', input_shape = self.state_size))
+            model.add(layers.Conv2D(filters=24, kernel_size=12, activation='relu'))
+            model.add(layers.Conv2D(filters=48, kernel_size=8,  activation='relu'))
+
+            print(model.output_shape)
 
             # decreasing
 
-            model.add(layers.Dense(units= , activation='relu'))
+            model.add(layers.Dense(units=128, activation='relu'))
             model.add(layers.Dense(units=4, activation='relu'))
 
         elif self.grid_size == 64:

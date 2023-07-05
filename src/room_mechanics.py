@@ -31,7 +31,7 @@ class RoomMechanics:
         # read the config file settings 
 
         config = configparser.ConfigParser()
-        config.read('../config.ini')
+        config.read('../config.cfg')
 
 
         self.CLEAN_THRESHOLD = float( config['GENERAL']['clean_threshold'] ) 

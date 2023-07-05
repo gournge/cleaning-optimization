@@ -226,4 +226,3 @@ def generate_room_method4(shape):
     plt.axis('off')
     plt.show()
     return room
-generate_room_method4(64)
