@@ -1,6 +1,8 @@
+from pathlib import Path 
+import configparser 
+
 import numpy as np
 import random
-import configparser 
 import matplotlib.pyplot as plt
 
 from shapely.geometry import Point
@@ -31,8 +33,9 @@ class RoomMechanics:
         # read the config file settings 
 
         config = configparser.ConfigParser()
-        config.read('../config.cfg')
-
+        parent_dir = Path(__file__).parent.parent.absolute() 
+        path_to_config = Path.joinpath(parent_dir, "config.cfg")
+        config.read(path_to_config)
 
         self.CLEAN_THRESHOLD = float( config['GENERAL']['clean_threshold'] ) 
         
