@@ -25,17 +25,9 @@ class DQLCleanAgent:
         """
 
         config = configparser.ConfigParser()
-        # parent_dir = Path(__file__).parent.absolute() 
-        # path_to_config = Path.joinpath(parent_dir, "config.cfg")
-        # print(path_to_config)
-
-        # config.read(path_to_config)
-        config.read(r"C:\Users\filip\OneDrive\Dokumenty\Pulpit\Filip - Laptop\cleaning-optimization\config.cfg")
-        # config.read(r"..\..\config.cfg")
-
-        print(config.sections())
-
-        print( len(config.items()) )
+        parent_dir = Path(__file__).parent.parent.absolute() 
+        path_to_config = Path.joinpath(parent_dir, "config.cfg")
+        config.read(path_to_config)
 
         memory = int(config['AGENT']['memory']) 
 
