@@ -18,7 +18,7 @@ def preprocess(room: np.array, mounds) -> tf.Tensor:
     d = room.shape[0]
     assert d == room.shape[1], "Preprocesses only square rooms"
 
-    out = tf.zeros((d, d, 3), tf.float32)
+    out = np.zeros((d, d, 3))
 
     for r, row in enumerate(room):
         for c, el in enumerate(row):
@@ -32,7 +32,7 @@ def preprocess(room: np.array, mounds) -> tf.Tensor:
         x, y = mound
         out[x][y][2] = 1. 
     
-    return out
+    return tf.convert_to_tensor(out)
 
 def amount_of_dirt(room: np.array, mounds):
     """

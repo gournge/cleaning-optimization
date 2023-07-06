@@ -30,8 +30,9 @@ class DQLCleanAgent:
         config.read(path_to_config)
 
         memory = int(config['AGENT']['memory']) 
+        possible_sizes = eval(config['GENERAL']['possible_sizes'])
 
-        if grid_size not in [32, 64, 128]: 
+        if grid_size not in possible_sizes: 
             raise NotImplementedError("No corresponding model architecture has been implemented")
 
         self.grid_size = grid_size
@@ -54,7 +55,7 @@ class DQLCleanAgent:
 
         model = Sequential()
 
-        if self.grid_size == 32:
+        if self.grid_size == 35:
             
             # `kernel` is a single little window that traverses through the 2d image
             # since 2d image has 3 channels, for each channel we would have a different kernel
@@ -65,20 +66,26 @@ class DQLCleanAgent:
 
             # kernel size chosen based on width of subrooms 
 
-            model.add(layers.Conv2D(filters=3,  kernel_size=15, activation='relu', input_shape = self.state_shape))
-            model.add(layers.Conv2D(filters=24, kernel_size=3, activation='relu'))
-            model.add(layers.Conv2D(filters=48, kernel_size=2,  activation='relu'))
+            # since room size at grid is either 6 or 7 it seems a good idea to make a kernel inclusive of two neighboring subrooms
+            model.add(layers.Conv2D(filters=3,  kernel_size=15, strides=(2, 2), activation='relu', input_shape = self.state_shape))
+            
+            model.add(layers.Conv2D(filters=24, kernel_size=5,  activation='relu'))
+            model.add(layers.Conv2D(filters=36, kernel_size=3,  activation='relu'))
 
-            print(model.summary())
+            # ??? instead of flatten ?
+            # see https://stats.stackexchange.com/a/194450 
+            # model.add(layers.Conv2D(filters=1, kernel_size=1, activation='relu'))
 
-            # decreasing
+            model.add(layers.Flatten())
 
-            model.add(layers.Dense(units=128, activation='relu'))
-            model.add(layers.Dense(units=4, activation='relu'))
+            # input is of size (None, 1200)
+            model.add(layers.Dense(units=200, activation='relu'))
+            model.add(layers.Dense(units=4))
+            model.add(layers.ReLU(max_value=1.0)) # TODO: consider changing to room dimensions
 
-        elif self.grid_size == 64:
+        elif self.grid_size == 71:
             raise NotImplementedError("No corresponding model architecture has been implemented")
-        elif self.grid_size == 128:
+        elif self.grid_size == 119:
             raise NotImplementedError("No corresponding model architecture has been implemented")
 
         model.compile(loss='mse',
@@ -90,9 +97,9 @@ class DQLCleanAgent:
 
     def act(self, state):
         if np.random.rand() <= self.epsilon:
-            return random.randrange(self.action_size)
-        act_values = self.model.predict(state, verbose = 0)
-        return np.argmax(act_values[0])  # returns action
+            print("random")
+            return np.random.rand(self.action_size)
+        return self.model.predict(state, verbose = 0)
 
     def replay(self, batch_size):
         # minibatch = random.sample(self.memory, batch_size)

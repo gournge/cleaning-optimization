@@ -22,7 +22,9 @@ def get_args():
     config.read("config.cfg")
 
     possible_sizes = eval(config['GENERAL']['possible_sizes'])
-    mounds_number = int(config['GENERAL']['mounds_number'])
+
+    default_room_size = possible_sizes[0]
+    default_mounds_number = int(config['GENERAL']['default_mounds_number'])
 
     parser = argparse.ArgumentParser("Train the cleaning agent")
 
@@ -31,10 +33,12 @@ def get_args():
     parser.add_argument("--initial_epsilon", type=float, default=0.1)
     parser.add_argument("--final_epsilon", type=float, default=1e-4)
 
-    parser.add_argument("--image_size",   type=int, default=32, choices=possible_sizes, help="The common width and height for all images")
-    parser.add_argument("--batch_size",   type=int, default=32, help="The number of images per batch")
+    parser.add_argument("--room_size",     type=int, default=default_room_size, choices=possible_sizes, help="The common width and height for all images")
+    parser.add_argument("--mounds_number", type=int, default=default_mounds_number,                     help="Amount of mounds")
+    
     parser.add_argument("--num_episodes", type=int, default=100) # TODO: check default 
     parser.add_argument("--num_moves",    type=int, default=100, help="How many times does the algorithm generate a move") # TODO: check default 
+    parser.add_argument("--batch_size",   type=int, default=32, help="The number of images per batch the agent replays.")
 
     parser.add_argument("--punish_clipping", type=float, default=0.5, help="How many percent smaller will the reward be if a movement is clipped?") # TODO: check default 
 
@@ -45,26 +49,46 @@ def get_args():
 
     args = parser.parse_args()
     
-    return args, mounds_number
+    return args
 
 
 def train(opts):
-
-    parser, mounds_number = opts
 
     if torch.cuda.is_available():
         torch.cuda.manual_seed(123)
     else:
         torch.manual_seed(123)
 
-    agent = dql_clean_agent.DQLCleanAgent(parser.image_size)
+    agent = dql_clean_agent.DQLCleanAgent(opts.room_size)
+    print("Agent initilized.")
 
-    # room layouts
-    init_states = list( room_generation.generate_room(parser.image_size) for _ in range(parser.num_episodes) )
+    room_generator = room_generation.RoomGenerator(opts.room_size)
+    print("Room generator initilized.")
+
+    # # room layouts
+    # init_states = []
+    # for _ in range(opts.num_episodes):
+
+    #     which_method = np.random.randint(4)
+    #     subroom_size = np.random.choice( room_generator.subroom_sizes )
+
+    #     new_init_state = None
+    #     if which_method == 0:
+    #         new_init_state = room_generator.average_pooling_method(subroom_size)
+    #     elif which_method == 1:
+    #         new_init_state = room_generator.simplex_method(subroom_size)
+    #     elif which_method == 2:
+    #         new_init_state = room_generator.simplex_method(subroom_size) # TODO: change
+    #     else: 
+    #         new_init_state = room_generator.simplex_method(subroom_size) # TODO: change
+
+    #     init_states.append(new_init_state)
+
+    init_states = [np.array(room_generation.generate_room_method4(opts.room_size))]
 
     for num_episode, room in enumerate(init_states):
         
-        mounds = plan_mounds_naive.plan_mounds_naive(room, mounds_number)
+        mounds = plan_mounds_naive.plan_mounds_naive(room, opts.mounds_number)
         env = room_mechanics.RoomMechanics(room=room, mounds=mounds)
 
         state = utility.preprocess(env.room, env.mounds)
@@ -77,6 +101,7 @@ def train(opts):
         for move_index in range(opts.num_moves):
 
             action = agent.act(state)
+            print(action)
 
             x1, y1, x2, y2 = action
 
@@ -91,15 +116,15 @@ def train(opts):
             agent.memorize(state, action, reward, next_state)
             state = next_state
 
-            if len(agent.memory) > parser.batch_size:
-                agent.replay(parser.batch_size)
+            if len(agent.memory) > opts.batch_size:
+                agent.replay(opts.batch_size)
 
 
         # TODO: update this metric
         score = np.sum(dirt_amounts) / amount_of_dirt_before
 
         print("episode: {}/{}, score: {}, e: {:.2}"
-              .format(num_episode, parser.num_episodes, score, agent.epsilon))
+              .format(num_episode, opts.num_episodes, score, agent.epsilon))
               
 
 if __name__ == '__main__':

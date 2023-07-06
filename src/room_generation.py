@@ -8,47 +8,40 @@ import perlin_noise
 
 class RoomGenerator:
 
-    def __init__(self, room_size: str, subroom_size: str):
+    def __init__(self, room_size: int):
         """
         Args:
             room_size: How big is the whole grid in the simulation.
-                       Can be either `'small'`, `'medium'`, or `'large'`
-
-            sub_room_size: How big are the subrooms.
-                           Can be either `'smaller'`, `'larger'`.
+                       See Readme what sizes are available.
 
         Returns:
-            `RoomGenerator` object with different generation methods
+            `RoomGenerator` object with various generation methods
 
         """
         
-        room_sizes_dict = { 'small'  : (35,  (6, 9)), 
-                            'medium' : (71,  (7, 9)),
-                            'large'  : (119, (6, 10)) }
-
-        sub_room_sizes_list = ['smaller', 'larger']
+        room_sizes_dict = { 35  : (6, 9), 
+                            71  : (7, 9),
+                            119 : (6, 10) }
 
         if room_size not in room_sizes_dict.keys():
             raise NotImplementedError("A room of such size cannot be generated")
+        
+        self.room_size = room_size
+        self.subroom_sizes = room_sizes_dict[room_size]
 
-        if subroom_size not in sub_room_sizes_list:
-            raise NotImplementedError("A room with such subroom sizes cannot be generated")
-
-
-        sizes = room_sizes_dict[room_size]
-        smaller = (subroom_size == 'smaller')
-
-        self.room_size    = sizes[0]
-        self.subroom_size = sizes[1][0] if smaller else sizes[1][1]
-
-
-    def average_pooling_method(self):
+    def average_pooling_method(self, subroom_size: int):
         """Generates random dirt and averages it out. 
+
+        Args:
+            subroom_size
 
         Returns:
             2d `np.array`        
         
         """
+
+        if subroom_size not in self.subroom_sizes:
+            raise NotImplementedError("A room with such subroom dimensions cannot be generated")
 
         temp = self.__generate_walls()
 
@@ -59,13 +52,20 @@ class RoomGenerator:
         pass
 
 
-    def simplex_method(self):
+    def simplex_method(self, subroom_size: int):
         """Generates random dirt based on simplex method
+
+        Args:
+            subroom_size
 
         Returns:
             2d `np.array`        
         
         """
+
+        if subroom_size not in self.subroom_sizes:
+            raise NotImplementedError("A room with such subroom dimensions cannot be generated")
+
 
         temp = self.__generate_walls()
 
@@ -279,10 +279,10 @@ def generate_room_method3(shape):
 def generate_room_method4(shape):
     m=shape
     k=np.random.randint(8, 12)
-    noise1 = PerlinNoise(octaves=3)
-    noise2 = PerlinNoise(octaves=6)
-    noise3 = PerlinNoise(octaves=12)
-    noise4 = PerlinNoise(octaves=24)
+    noise1 = perlin_noise.PerlinNoise(octaves=3)
+    noise2 = perlin_noise.PerlinNoise(octaves=6)
+    noise3 = perlin_noise.PerlinNoise(octaves=12)
+    noise4 = perlin_noise.PerlinNoise(octaves=24)
     room = []
     for i in range(m):
         row = []

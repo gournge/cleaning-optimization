@@ -1,3 +1,22 @@
+# TODO:
+
+# Filip
+
+- [ ] train agent on 35x35
+    - [ ] memorization
+    - [ ] replay
+
+- [ ] requirements.txt
+- [ ] design CNN architectures on other room sizes
+- [ ] explore tensorboard
+
+## Wojtek
+
+- [ ] encapsulate roomgeneration in a class
+- [ ] document code (comments, docstrings)
+- [ ] return type of rooms generated should be `np.array`
+
+
 # Structure
  
 The `config.ini` file defines some universal constants that you rather shouldn't change. If you really want to keep it mind that it can majorly disrupt environment's behaviour.

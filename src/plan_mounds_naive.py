@@ -14,7 +14,7 @@ def plan_mounds_naive(room: np.array, mounds_number: int) :
     - list of 2d positions of mounds
     """
 
-    warnings.warn("Planning mounds is random instead of naive", NotImplemented)
+    warnings.warn("Planning mounds is random instead of naive")
 
     out = []
     d = room.shape[0]
