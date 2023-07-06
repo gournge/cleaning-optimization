@@ -30,6 +30,8 @@ def preprocess(room: np.array, mounds) -> tf.Tensor:
 
     for mound in mounds:
         x, y = mound
+        out[x][y][0] = 0.
+        out[x][y][1] = 0.
         out[x][y][2] = 1. 
     
     return tf.convert_to_tensor(out)
