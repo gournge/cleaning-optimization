@@ -1,5 +1,5 @@
 import numpy as np
-import tensorflow as tf
+from tensorflow import convert_to_tensor
 
 def preprocess(room: np.array, mounds) -> tf.Tensor:
     """Converts two `np.array`s of size NxN to a representation through a tensor object of dimensions NxNx3 
@@ -34,7 +34,7 @@ def preprocess(room: np.array, mounds) -> tf.Tensor:
         out[x][y][1] = 0.
         out[x][y][2] = 1. 
     
-    return tf.convert_to_tensor(out)
+    return convert_to_tensor(out)
 
 def amount_of_dirt(room: np.array, mounds):
     """
