@@ -3,10 +3,10 @@
 # Filip
 
 - [ ] train agent on 35x35
-    - [ ] memorization
-    - [ ] replay
+    - [x] memorization
+    - [x] replay
 
-- [ ] requirements.txt
+- [x] requirements.txt *(used pipreqs)*
 - [ ] design CNN architectures on other room sizes
 - [ ] explore tensorboard
 
@@ -15,7 +15,9 @@
 - [ ] encapsulate roomgeneration in a class
 - [ ] document code (comments, docstrings)
 - [ ] return type of rooms generated should be `np.array`
-
+- [ ] visualisations of `35x35` cleaning model architecture with two variants: 
+    - broom endpoints as input to first layer 
+    - broom endpoints as input to a layer after flatten (900 + 4)
 
 # Structure
  
@@ -44,3 +46,12 @@ The deeper application of this project is to see if during a process of collecti
 Name conventions in this project describe actions related to cleaning a room with a broom. It's simpler to visualize the objective this way. Interpreting collective movement through the perspective of using a broom also allows us to further generalize the results returned by the model to tasks involving discontinous values such as value of 1 standing for a large box, value 0.6 for a medium one and 0.2 for a small package.
 
 The model atttempts to find an optimal sequence of broom movements to clean a room with a given shape. The sequence is found by sequentially applying the NEAT algorithm (```CleaningModel.py```), which has been trained on random rooms (```RoomGeneration.py```) first with naively chosen mounds of dirt (by applying clustering algorithms - intuitvely we should sweep the broom to where dirt is mostly clustered.) After the NEAT algorithm has been developed, a module (```PlanMoundsModel.py```) for planning mounds (mounds in the room mechanics act like holes in the floor consuming the dirt) is trained on random rooms and based on evaluations of the NEAT Cleaning Model. 
+
+# Implementation details 
+
+## Environment mechanics
+
+## Deep Q-Learning agent
+
+Following the [flappy bird DQL architecture](https://github.com/uvipen/Flappy-bird-deep-Q-learning-pytorch) and a survey of conv 
+

@@ -1,0 +1,9 @@
+keras==2.12.0
+matplotlib==3.5.1
+numpy==1.23.5
+opensimplex==0.4.4
+perlin_noise==1.12
+Shapely==2.0.1
+tensorflow==2.12.0
+tensorflow_intel==2.12.0
+torch==2.0.1
