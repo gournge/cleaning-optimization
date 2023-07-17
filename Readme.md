@@ -12,6 +12,7 @@
 
 ## Wojtek
 
+- [ ] fix roomgeneration module to return values in a proper colormap (see `room_mechanics.py`)
 - [ ] encapsulate roomgeneration in a class
 - [ ] document code (comments, docstrings)
 - [ ] return type of rooms generated should be `np.array`
