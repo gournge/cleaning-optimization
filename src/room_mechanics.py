@@ -4,6 +4,7 @@ import configparser
 import numpy as np
 import random
 import matplotlib.pyplot as plt
+import matplotlib.patches as patches
 
 from shapely.geometry import Point
 from shapely.geometry.polygon import Polygon
@@ -37,8 +38,6 @@ class RoomMechanics:
         path_to_config = Path.joinpath(parent_dir, "config.cfg")
         config.read(path_to_config)
 
-        self.CLEAN_THRESHOLD = float( config['GENERAL']['clean_threshold'] ) 
-        
         self.BROOM_MOVEMENT_LENGTH_RANGE = ( float(config['BROOM']['min_movement_length']),
                                              float(config['BROOM']['max_movement_length']) )
         
@@ -55,35 +54,43 @@ class RoomMechanics:
         self.BROOM_REDISTRIBUTION_MAX_ITERATIONS = int( config['BROOM']['broom_redistribution_max_iterations'] )
 
 
-    def show_room(self, list_of_rects = [], line_eqs = []):
+    def show_room(self, list_of_rects = [], colored_line_eqs = [], colored_segments=[]):
         """
             matplotlib graph pops up
         """
 
+        # note the transposition
+        new_room = 1 - self.room.T
+        new_room[new_room <= -1] = 2
+
         cmap = plt.cm.get_cmap('gray') # grayscale
         cmap.set_over((0, 0.8, 1)) # specific value for walls (value 2)
         
-        # note the transposition
-
-        new_room = 1 - self.room.T
-        new_room[new_room == -1] = 2
-
         plt.imshow(new_room, cmap=cmap, vmin=0, vmax=1)
         
+        for mound in self.mounds:
+            rect = patches.Rectangle(np.array(mound) - 0.5, 1, 1, facecolor='purple')
+            ax = plt.gca()
+            ax.add_patch(rect)
+
         for rect in list_of_rects:
             rect = utility.create_list_of_sides(rect)
             for side in rect:
                 plt.plot([ side[0][0], side[1][0] ], [side[0][1], side[1][1]])
 
-        for line_eq in line_eqs:
+        for color, line_eq in colored_line_eqs:
             a, b, c = line_eq
 
             if b == 0: 
-                plt.plot([0, self.room_width], [-c/b, -c/b])
+                plt.plot([0, self.room_width], [-c/b, -c/b], color)
                 continue
 
             # y = - a/b x - c/b
-            plt.plot([0, self.room_width], [-c/b, - a/b * self.room_width - c/b ])
+            plt.plot([0, self.room_width], [-c/b, - a/b * self.room_width - c/b ], color)
+
+        for color, coords in colored_segments:
+            x1, y1, x2, y2 = coords
+            plt.plot([x1, x2], [y1, y2], color)
 
         plt.axis('off')
         plt.show()
@@ -125,14 +132,14 @@ class RoomMechanics:
         if_corrected_forwards, rect_main, rect_front, too_close = self.__correct_pointing_forward(rect_main, rect_front, tilt)
 
         if too_close: 
-            return 0, False 
+            return 0, 0, True 
 
         def valid_len(len_rect):
             return (len_rect >= self.BROOM_MOVEMENT_LENGTH_RANGE[0] ) and (len_rect <= self.BROOM_MOVEMENT_LENGTH_RANGE[1] )
 
         if not valid_len( np.linalg.norm(rect_main[0] - rect_main[3]) ): 
             # no spillover dirt
-            return 0, False
+            return 0, 0, True
 
         point_of_exceeded_capacity, front_mass, residue_mass, points_main = self.__find_exceeded_capacity_point(rect_main)
 
@@ -534,17 +541,3 @@ class RoomMechanics:
     def is_valid(self, point):
         x, y = point
         return (0 <= x) and (x < self.room_width) and (0 <= y) and (y < self.room_height)
-
-    def is_clean(self):
-        """
-            returns false if there is a dirty cell, true otherwise
-        """
-
-        for r in self.room: 
-            for el in r:
-                # discard walls
-                if el == 2: continue
-
-                if el > self.CLEAN_THRESHOLD:
-                    return False
-        return True

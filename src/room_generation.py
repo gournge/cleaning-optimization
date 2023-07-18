@@ -29,6 +29,20 @@ class RoomGenerator:
         self.room_size = room_size
         self.subroom_sizes = room_sizes_dict[room_size]
 
+
+    def any_method(self):
+        """Generate a room with any (of preset) subroom size by a randomly chosen method
+
+        """
+
+        subroom_size = np.random.choice(self.subroom_sizes)
+
+        i = np.random.randint(2)
+        if i == 0:
+            return self.average_pooling_method(subroom_size)
+        elif i == 1:
+            return self.simplex_method(subroom_size)
+
     def average_pooling_method(self, subroom_size: int):
         """Generates random dirt and averages it out. 
 
@@ -46,7 +60,7 @@ class RoomGenerator:
         temp = self.__generate_walls()
 
         # special case
-        if (self.room_size, self.subroom_size) == (35, 7):
+        if (self.room_size, subroom_size) == (35, 7):
             pass
 
         pass
@@ -70,7 +84,7 @@ class RoomGenerator:
         temp = self.__generate_walls()
 
         # special case
-        if (self.room_size, self.subroom_size) == (35, 7):
+        if (self.room_size, subroom_size) == (35, 7):
             pass
 
         pass
@@ -304,9 +318,12 @@ def generate_room_method4(shape):
             if(np.random.randint(0, 10)>7.5):
                 for j in range(k):
                     room[i][j+p]=2
-    cmap = plt.cm.get_cmap('gray') # type: ignore # grayscale
-    cmap.set_over((0, 0.8, 1)) # specific value for walls (value 2)
-    plt.imshow(room, cmap=cmap, vmin=0, vmax=1)
-    plt.axis('off')
-    plt.show()
-    return room
+
+    # cmap = plt.cm.get_cmap('gray') # type: ignore # grayscale
+    # cmap.set_over((0, 0.8, 1)) # specific value for walls (value 2)
+    # plt.imshow(room, cmap=cmap, vmin=0, vmax=1)
+    # plt.axis('off')
+    # plt.show()
+    
+    # wojtek czemu brud wywalalo na ujemne wartosci siedzialem nad tym 10min 
+    return np.clip(room, 0, 2)

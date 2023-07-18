@@ -1,40 +1,85 @@
 import numpy as np
+from tensorflow import Tensor
 from tensorflow import convert_to_tensor
 
-def preprocess(room: np.array, mounds) -> tf.Tensor:
-    """Converts two `np.array`s of size NxN to a representation through a tensor object of dimensions NxNx3 
+
+def preprocess(room: np.array, mounds) -> Tensor:
+    """Converts two `np.array`s of size NxN to a representation through a tensor object of dimensions either `(1, N, N, 3)` (first dimension is for batch size) 
     
     Arguments:
     ---------
     - `np.array` room with walls of value 2 and dirt of value between 0 and 1
     - `np.array` array of 2d positions in the room where mounds are
-    
+
     Returns:
     --------
     - `tf.Tensor` : [x][y][0] is for dirt, [x][y][1] is for walls, [x][y][2] is for mounds.
 
     """
 
+
     d = room.shape[0]
     assert d == room.shape[1], "Preprocesses only square rooms"
 
-    out = np.zeros((d, d, 3))
+    out = np.zeros((1, d, d, 3))
 
     for r, row in enumerate(room):
         for c, el in enumerate(row):
             
             if el == 2: 
-                out[r][c][1] = 1.
+                out[0][r][c][1] = 1.
             else:
-                out[r][c][0] = el
+                out[0][r][c][0] = el
 
     for mound in mounds:
         x, y = mound
-        out[x][y][0] = 0.
-        out[x][y][1] = 0.
-        out[x][y][2] = 1. 
-    
+        out[0][x][y][0] = 0.
+        out[0][x][y][1] = 0.
+        out[0][x][y][2] = 1. 
+
     return convert_to_tensor(out)
+
+def update_broom(room_size: int, action: int, broom):
+    """
+
+    Args: 
+    ----
+    - `room_size`
+    - `action` 
+        - 0 - 3 is for beg of movement
+        - 4 - 7 is for end of movement
+
+    - `broom` np.array of 4 integers
+
+    Returns: 
+    ----
+    - updated broom if action is not 8
+
+    Order of action is top/down/left/right 
+
+    """
+
+    # beg of movement
+    if action == 0:
+        broom[1] += 1
+    elif action == 1:
+        broom[1] -= 1
+    elif action == 2:
+        broom[0] -= 1
+    elif action == 3:
+        broom[0] += 1
+
+    # end of movement
+    if action == 4:
+        broom[3] += 1
+    elif action == 5:
+        broom[3] -= 1
+    elif action == 6:
+        broom[2] -= 1
+    elif action == 7:
+        broom[2] += 1
+
+    return np.clip(broom, 0, room_size-1)
 
 def amount_of_dirt(room: np.array, mounds):
     """

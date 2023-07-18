@@ -5,6 +5,6 @@ class PlanMounds:
 
     def __init__(self, room: np.array ):
 
-        self.mRoom = room
+        self.room = room
 
         pass
