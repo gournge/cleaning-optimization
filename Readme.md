@@ -71,3 +71,8 @@ Sampling an action from a normal distribution, however, presents us with some pr
     - let the agent calculate std for each of the random variables in the action 
     - gradually decrease the std during training until it reaches a value like `0.001`
     - keep the std constant.
+
+After more research it has been decided that a different model will be used instead.
+
+## DDPG model
+
