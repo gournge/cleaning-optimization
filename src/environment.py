@@ -12,7 +12,7 @@ class CleaningEnv:
     
     """
 
-    def __init__(self, room_size, punish_clipping, mounds = None, mounds_number = None):
+    def __init__(self, room_size, punish_clipping, mounds_number = None, manual_mounds = False):
         """Create an env of given size. Provide mounds plan yourself or let the program generate it automatically.
         
         
@@ -25,7 +25,7 @@ class CleaningEnv:
             
         """
 
-        if mounds is None and mounds_number is None: 
+        if not manual_mounds and mounds_number is None: 
             raise KeyError('you have to provide number of mounds to be generated.') 
 
         self.room_size = room_size
@@ -34,39 +34,46 @@ class CleaningEnv:
         self.room_generator = room_generation.RoomGenerator(room_size)
         
         # room = self.room_generator.any_method()
-        room = room_generation.generate_room_method4(self.room_size)
+        self.room = room_generation.generate_room_method4(self.room_size)
 
+        self.room_mechanics = None
+        if not manual_mounds:
+            mounds = plan_mounds_naive.plan_mounds_naive(self.room, mounds_number)
+            self.room_mechanics = room_mechanics.RoomMechanics(room=self.room, mounds=mounds)
 
-        final_mounds = None
-        if mounds is None:
-            final_mounds = plan_mounds_naive.plan_mounds_naive(room, mounds_number)
-        else:
-            final_mounds = mounds
 
         # needs the room layout (with dirt) and the plan of mounds
-        self.room_mechanics = room_mechanics.RoomMechanics(room=room, mounds=final_mounds)
 
         self.previous_action = None
 
-    def render(self):
-        actions = [] if self.previous_action is None else ['r', self.previous_action]
+
+    def apply_mounds_plan(self, mounds):
+        self.room_mechanics = room_mechanics.RoomMechanics(room=self.room, mounds=mounds)
+
+    def render(self, actions = None):
+
+        if actions is None:
+            actions = [] if self.previous_action is None else [('r', self.previous_action)]
+
         self.room_mechanics.show_room(colored_segments=actions)
 
     def act(self, broom):
         """
-            Broom is a tuple of four floats describing coords of endpoints of the broom.
+            Args:
+            ----
+                `broom` tuple of four floats describing coords of endpoints of the broom.
+            
+            Returns:
+            ------
+                - `reward`
+                - `Tensor` of size `(room_size, room_size, 3)`
         """
 
-        # pos1, pos2 = broom[:1], broom[2:]
+        x1, y1, x2, y2 = broom
 
-        pos1 = np.random.rand(2) * self.room_size
-        pos2 = np.random.rand(2) * self.room_size 
+        cleaned_dirt, _, clipped = self.room_mechanics.move_broom((x1, y1), (x2, y2))
 
-        print(pos1, pos2)
-
-        cleaned_dirt, _, clipped = self.room_mechanics.move_broom(pos1, pos2)
-
-        reward = cleaned_dirt if not clipped else (1 + cleaned_dirt) * (1 - self.punish_clipping) 
+        reward = cleaned_dirt - self.punish_clipping * clipped
 
         return reward, utility.preprocess(self.room_mechanics.room, self.room_mechanics.mounds)
     

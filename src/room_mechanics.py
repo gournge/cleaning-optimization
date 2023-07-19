@@ -55,8 +55,14 @@ class RoomMechanics:
 
 
     def show_room(self, list_of_rects = [], colored_line_eqs = [], colored_segments=[]):
-        """
-            matplotlib graph pops up
+        """Show current room layout with overlayed elements.
+
+            Args:
+            ----
+            - `list_of_rects` (optional) - list of tuples of positions of form `(x, y)`
+            - `colored_line_eqs` (optional) - list of tuples of three numbers
+            - `colored_segments` (optional) - list of tuples of four numbers. tuples are of form `(x1, y1, x2, y2)`
+            
         """
 
         # note the transposition
@@ -88,9 +94,15 @@ class RoomMechanics:
             # y = - a/b x - c/b
             plt.plot([0, self.room_width], [-c/b, - a/b * self.room_width - c/b ], color)
 
-        for color, coords in colored_segments:
-            x1, y1, x2, y2 = coords
-            plt.plot([x1, x2], [y1, y2], color)
+        if colored_segments:
+            if len(colored_segments[0]) == 2:
+                for color, coords in colored_segments:
+                    x1, y1, x2, y2 = coords
+                    plt.plot([x1, x2], [y1, y2], color)
+            else:
+                for coords in colored_segments:
+                    x1, y1, x2, y2 = coords
+                    plt.plot([x1, x2], [y1, y2])
 
         plt.axis('off')
         plt.show()
