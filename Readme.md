@@ -12,10 +12,10 @@
 
 ## Wojtek
 
-- [ ] fix roomgeneration module to return values in a proper colormap (see `room_mechanics.py`)
-- [ ] encapsulate roomgeneration in a class
+- [x] fix roomgeneration module to return values in a proper colormap (see `room_mechanics.py`)
+- [x] encapsulate roomgeneration in a class
 - [ ] document code (comments, docstrings)
-- [ ] return type of rooms generated should be `np.array`
+- [x] return type of rooms generated should be `np.array`
 - [ ] visualisations of `35x35` cleaning model architecture with two variants: 
     - broom endpoints as input to first layer 
     - broom endpoints as input to a layer after flatten (900 + 4)
