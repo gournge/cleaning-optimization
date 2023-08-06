@@ -84,6 +84,9 @@ def train(opts):
             moves.append(action)
 
             reward, observation_ = env.act(action)
+            
+            if reward == 0: continue
+
             score += reward
             agent.remember(observation, action, reward, observation_)
             agent.learn()

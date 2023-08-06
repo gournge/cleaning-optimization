@@ -73,7 +73,8 @@ class CleaningEnv:
 
         cleaned_dirt, _, clipped = self.room_mechanics.move_broom((x1, y1), (x2, y2))
 
-        reward = cleaned_dirt - self.punish_clipping * clipped
+        # error might have occured in the env
+        reward = (cleaned_dirt - self.punish_clipping * clipped) if cleaned_dirt > 0 else 0
 
         return reward, utility.preprocess(self.room_mechanics.room, self.room_mechanics.mounds)
     

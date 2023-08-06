@@ -3,3 +3,4 @@ __pycache__/
 
 time_spent.txt
 *.pyc
+test.py
