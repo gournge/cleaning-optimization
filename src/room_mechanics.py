@@ -20,8 +20,7 @@ class RoomMechanics:
     """
 
     def __init__(self, room: np.array, mounds: np.array):
-        """
-            toolset for operating in a room 
+        """Environment simulating moving a broom 
         """
     
         self.room = room

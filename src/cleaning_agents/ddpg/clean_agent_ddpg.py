@@ -14,6 +14,7 @@ class Agent:
         self.noise = noise
         self.max_action = max_action
         self.min_action = min_action
+        self.input_dims = input_dims
 
         self.gamma = gamma
         self.tau = tau
@@ -74,7 +75,7 @@ class Agent:
 
         actions = (1 + actions) * (self.max_action / 2)
 
-        actions = tf.clip_by_value(actions, self.min_action, self.max_action)
+        actions = tf.clip_by_value(actions, self.min_action, self.max_action - 1)
 
         return actions[0]
 
@@ -115,16 +116,20 @@ class Agent:
 
     def save_models(self, dir_name):
         print('... saving models ...')
-        self.actor.save_weights(os.path.join(dir_name, self.actor.model_name + '_ddpg.h5'))
-        self.target_actor.save_weights(os.path.join(dir_name, self.target_actor.model_name + '_ddpg.h5'))
-        self.critic.save_weights(os.path.join(dir_name, self.critic.model_name + '_ddpg.h5'))
-        self.target_critic.save_weights(os.path.join(dir_name, self.target_critic.model_name + '_ddpg.h5'))
+        self.actor.save_weights(os.path.join(dir_name, self.actor.model_name + "_room" + str(self.input_dims[0]) +  '_ddpg.h5'))
+        self.target_actor.save_weights(os.path.join(dir_name, self.target_actor.model_name + "_room" + str(self.input_dims[0]) + '_ddpg.h5'))
+        self.critic.save_weights(os.path.join(dir_name, self.critic.model_name + "_room" + str(self.input_dims[0]) + '_ddpg.h5'))
+        self.target_critic.save_weights(os.path.join(dir_name, self.target_critic.model_name + "_room" + str(self.input_dims[0]) + '_ddpg.h5'))
+
+        # self.memory.save(dir_name)
 
     def load_models(self, dir_name):
         print('... loading models ...')
 
-        self.actor.load_weights(os.path.join(dir_name, self.actor.model_name + '_ddpg.h5'))
-        self.target_actor.load_weights(os.path.join(dir_name, self.target_actor.model_name + '_ddpg.h5'))
-        self.critic.load_weights(os.path.join(dir_name, self.critic.model_name + '_ddpg.h5'))
-        self.target_critic.load_weights(os.path.join(dir_name, self.target_critic.model_name + '_ddpg.h5'))
+        self.actor.load_weights(os.path.join(dir_name, self.actor.model_name + "_room" + str(self.input_dims[0]) + '_ddpg.h5'))
+        self.target_actor.load_weights(os.path.join(dir_name, self.target_actor.model_name + "_room" + str(self.input_dims[0]) + '_ddpg.h5'))
+        self.critic.load_weights(os.path.join(dir_name, self.critic.model_name + "_room" + str(self.input_dims[0]) + '_ddpg.h5'))
+        self.target_critic.load_weights(os.path.join(dir_name, self.target_critic.model_name + "_room" + str(self.input_dims[0]) + '_ddpg.h5'))
         self.update_network_parameters()
+
+        # self.memory.load(dir_name)

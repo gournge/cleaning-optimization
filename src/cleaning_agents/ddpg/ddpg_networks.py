@@ -66,7 +66,7 @@ class ActorNetwork(Model):
             self.flatten = layers.Flatten()
 
             self.dense_1 = layers.Dense(units=200)
-            self.dense_2 = layers.Dense(units=n_actions, activation='tanh')
+            self.dense_2 = layers.Dense(units=n_actions, activation='relu')
         
         else:
             raise NotImplementedError("No corresponding model architecture has been implemented")
