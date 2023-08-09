@@ -50,7 +50,7 @@ def get_args():
 
     parser.add_argument("--punish_clipping", type=float, default=5.0, help="How much do we subtract from a reward if a movement is clipped?")
 
-    parser.add_argument("--between_snapshots", type=int, default=10, help="How many episodes need to pass in order for the snapshot to appear after a full episode.\nSet to -1 if you don\'t want to see snapshots.")
+    parser.add_argument("--between_snapshots", type=int, default=-1, help="How many episodes need to pass in order for the snapshot to appear after a full episode.\nSet to -1 if you don\'t want to see snapshots.")
 
     args = parser.parse_args()
     

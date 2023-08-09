@@ -30,7 +30,7 @@ class RoomMechanics:
 
         self.mounds = mounds
 
-        # changes context in different broom movements
+        # reset every move
         self.cleaned_dirt = 0
 
         # read the config file settings 
@@ -140,7 +140,6 @@ class RoomMechanics:
             See Readme for a more precise explanation. 
         """
         
-        # reset every move
         self.cleaned_dirt = 0
 
         if_corrected_forwards, if_corrected_sides = False, False

@@ -1,0 +1,55 @@
+Current architecture:
+
+    conv2d_9 (Conv2D)           multiple                  2704
+
+    conv2d_10 (Conv2D)          multiple                  2424
+
+    conv2d_11 (Conv2D)          multiple                  7812
+
+    flatten_3 (Flatten)         multiple                  0
+
+    dense_6 (Dense)             multiple                  184620
+
+    dense_7 (Dense)             multiple                  205
+
+Experiments
+
+- id 1:
+    - git hash:
+    - activation functions
+        - conv2d: relu
+        - dense1: None
+        - dense2: relu
+
+    - command: 
+        python train_cleaning_ddpg.py --load_previous_models False --load_models_path experiments/id1 --num_moves 30 --num_episodes 2000 --replay_memory_size 1000 --batch_size 1000 --noise 0.3
+
+    - results:
+        -
+
+- id 2:
+    - activation functions
+        - conv2d: relu
+        - dense1: None
+        - dense2: relu
+    
+    - command: 
+        python train_cleaning_ddpg.py --load_previous_models False --load_models_path experiments/id2 --num_moves 30 --num_episodes 2000 --replay_memory_size 1000 --batch_size 1000 --noise 0.5
+
+    - results:
+        - 
+
+- id 3:
+    - activation functions
+        - conv2d: relu
+        - dense1: None
+        - dense2: relu
+
+    - command: 
+        python train_cleaning_ddpg.py --load_previous_models False --load_models_path experiments/id3 --num_moves 30 --num_episodes 2000 --replay_memory_size 1000 --batch_size 1000 --noise 0.7
+   
+    - results
+        - 
+
+
+
