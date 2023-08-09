@@ -1,0 +1,23 @@
+Current architecture:
+
+    conv2d_9 (Conv2D)           multiple                  2704
+
+    conv2d_10 (Conv2D)          multiple                  2424
+
+    conv2d_11 (Conv2D)          multiple                  7812
+
+    flatten_3 (Flatten)         multiple                  0
+
+    dense_6 (Dense)             multiple                  184620
+
+    dense_7 (Dense)             multiple                  205
+
+Activation functions:
+
+1. conv2d relu + dense tanh + punish clipping 5:
+    after 200 episodes small local maximum
+
+2. all sigmoid + punish clipping 5:
+
+3. all tanh + punish clipping 5:
+
