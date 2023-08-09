@@ -44,7 +44,7 @@ class CleaningEnv:
 
         # needs the room layout (with dirt) and the plan of mounds
 
-        self.previous_action = None
+        self.previous_actions = []
 
 
     def apply_mounds_plan(self, mounds):
@@ -53,7 +53,7 @@ class CleaningEnv:
     def render(self, actions = None):
 
         if actions is None:
-            actions = [] if self.previous_action is None else [('r', self.previous_action)]
+            actions = [] if self.previous_actions else [('r', self.previous_action)]
 
         self.room_mechanics.show_room(colored_segments=actions)
 
@@ -76,6 +76,9 @@ class CleaningEnv:
         # error might have occured in the env
         reward = (cleaned_dirt - self.punish_clipping * clipped) if cleaned_dirt > 0 else 0
 
+        
+
+
         return reward, utility.preprocess(self.room_mechanics.room, self.room_mechanics.mounds)
     
     def reset(self, mounds = None, mounds_number = None):
@@ -86,7 +89,7 @@ class CleaningEnv:
         if mounds is None and mounds_number is None:
             mounds_number = len(self.room_mechanics.mounds)
 
-        self.previous_action = None
+        self.previous_actions = []
 
         room = self.room_generator.any_method()
 
