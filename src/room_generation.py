@@ -178,31 +178,4 @@ class RoomGenerator:
         
 
         pass
-        
-
-roomGenerator = RoomGenerator(35)
-
-room=roomGenerator.perlin_method(6)
-
-cmap = plt.cm.get_cmap('gray_r') # type: ignore # grayscale
-cmap.set_over((0, 0.8, 1)) # specific value for walls (value 2)
-plt.imshow(room, cmap=cmap, vmin=0, vmax=1)
-plt.axis('off')
-plt.show()
-
-room=roomGenerator.simplex_method(6)
-
-cmap = plt.cm.get_cmap('gray_r') # type: ignore # grayscale
-cmap.set_over((0, 0.8, 1)) # specific value for walls (value 2)
-plt.imshow(room, cmap=cmap, vmin=0, vmax=1)
-plt.axis('off')
-plt.show()
-
-room=roomGenerator.average_pooling_method(6)
-
-cmap = plt.cm.get_cmap('gray_r') # type: ignore # grayscale
-cmap.set_over((0, 0.8, 1)) # specific value for walls (value 2)
-plt.imshow(room, cmap=cmap, vmin=0, vmax=1)
-plt.axis('off')
-plt.show()
 
