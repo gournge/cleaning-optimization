@@ -52,6 +52,9 @@ def get_args():
 
     parser.add_argument("--between_snapshots", type=int, default=-1, help="How many episodes need to pass in order for the snapshot to appear after a full episode.\nSet to -1 if you don\'t want to see snapshots.")
 
+    parser.add_argument("--gpu", type=int, default=0, help="If relevant: which one to choose from.")
+    
+
     args = parser.parse_args()
     
     return args
@@ -65,6 +68,8 @@ def save_history(dir_name, sequence):
             file.write(str(item) + '\n')
 
 def train(opts):
+
+    os.environ["CUDA_VISIBLE_DEVICES"] = str(opts.gpu)
 
     env = CleaningEnv(opts.room_size, opts.punish_clipping, mounds_number=opts.mounds_number)
     print("Environment initialized")
