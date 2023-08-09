@@ -30,3 +30,23 @@ class ReplayBuffer:
         rewards = self.reward_memory[batch]
 
         return states, actions, rewards, states_
+    
+    def save(self, dir_name):
+        np.savez(dir_name + '/memory.npz',
+                 self.mem_size, 
+                 self.mem_cntr, 
+                 self.state_memory,
+                 self.new_state_memory,
+                 self.action_memory,
+                 self.reward_memory)
+        
+    def load(self, dir_name):
+        data = np.load(dir_name + '/memory.npz')
+
+        self.mem_size         = data['mem_size']
+        self.mem_cntr         = data['mem_cntr']
+        self.state_memory     = data['state_memory']
+        self.new_state_memory = data['new_state_memory']
+        self.action_memory    = data['action_memory']
+        self.reward_memory    = data['reward_memory']
+    

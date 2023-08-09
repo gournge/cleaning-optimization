@@ -1,5 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
 
 # dirt generation
 import opensimplex
@@ -35,70 +34,56 @@ class RoomGenerator:
 
         """
 
-        subroom_size = np.random.choice(self.subroom_sizes)
-
-        i = np.random.randint(2)
+        i = np.random.randint(3)
         if i == 0:
-            return self.average_pooling_method(subroom_size)
+            return self.average_pooling_method()
         elif i == 1:
-            return self.simplex_method(subroom_size)
+            return self.simplex_method()
+        elif i == 2:
+            return self.perlin_method()
 
-    def average_pooling_method(self, subroom_size: int):
+    def average_pooling_method(self):
         """Generates random dirt and averages it out. 
-
-        Args:
-            subroom_size
 
         Returns:
             2d `np.array`        
         
         """
-        if subroom_size not in self.subroom_sizes:
-            raise NotImplementedError("A room with such subroom dimensions cannot be generated")
-        else:
-            m=self.room_size
-            room=np.zeros((m, m))
+        
+        m=self.room_size
+        room=np.zeros((m, m))
+        for i in range(m):
+            for j in range(m):
+                room[j, i]=np.random.rand()
+        for k in range(0, 2):
             for i in range(m):
                 for j in range(m):
-                    room[j, i]=np.random.rand()
-            for k in range(0, 2):
-                for i in range(m):
-                    for j in range(m):
-                        if j-1>=0 and i-1>=0 and j+1<m and i+1<m and room[j, i]!=2:
-                            if(room[j, i]+room[j-1, i]+room[j+1, i]+room[j, i-1]+room[j, i+1])/5<=1:
-                                room[j, i]=(room[j, i]+room[j-1, i]+room[j+1, i]+room[j, i-1]+room[j, i+1])/5
-                            else: room[j, i]=(room[j, i]+room[j-1, i]+room[j+1, i]+room[j, i-1]+room[j, i+1])/5 - 0.2
-                for i in range(2, m-2):
-                    room[0, i]=(room[1, i-1]+room[1, i+1]+room[1, i])/3
-                    room[m-1, i]=(room[m-1, i-1]+room[m-1, i+1]+room[m-1, i])/3
-                    room[0, i]=(room[1, i-1]+room[1, i+1]+room[1, i])/3
-                    room[m-1, i]=(room[m-1, i-1]+room[m-1, i+1]+room[m-1, i])/3
-                
-                for j in range(2, m-2):
-                    room[j, 0]=(room[j-1, 1]+room[j+1, 1]+room[j, 1])/3
-                    room[j, m-1]=(room[j-1, m-1]+room[j+1, m-1]+room[j, m-1])/3
-                    room[j, 0]=(room[j-1, 1]+room[j+1, 1]+room[j, 1])/3
-                    room[j, m-1]=(room[j-1, m-1]+room[j+1, m-1]+room[j, m-1])/3
-
-            walls=self.__generate_walls()
-
-            for i in range(m):
-                for j in range(m):
-                    if(walls[j, i]>room[j, i]):
-                        room[j, i]=walls[j, i]
+                    if j-1>=0 and i-1>=0 and j+1<m and i+1<m and room[j, i]!=2:
+                        if(room[j, i]+room[j-1, i]+room[j+1, i]+room[j, i-1]+room[j, i+1])/5<=1:
+                            room[j, i]=(room[j, i]+room[j-1, i]+room[j+1, i]+room[j, i-1]+room[j, i+1])/5
+                        else: room[j, i]=(room[j, i]+room[j-1, i]+room[j+1, i]+room[j, i-1]+room[j, i+1])/5 - 0.2
+            for i in range(2, m-2):
+                room[0, i]=(room[1, i-1]+room[1, i+1]+room[1, i])/3
+                room[m-1, i]=(room[m-1, i-1]+room[m-1, i+1]+room[m-1, i])/3
+                room[0, i]=(room[1, i-1]+room[1, i+1]+room[1, i])/3
+                room[m-1, i]=(room[m-1, i-1]+room[m-1, i+1]+room[m-1, i])/3
             
-            return room
+            for j in range(2, m-2):
+                room[j, 0]=(room[j-1, 1]+room[j+1, 1]+room[j, 1])/3
+                room[j, m-1]=(room[j-1, m-1]+room[j+1, m-1]+room[j, m-1])/3
+                room[j, 0]=(room[j-1, 1]+room[j+1, 1]+room[j, 1])/3
+                room[j, m-1]=(room[j-1, m-1]+room[j+1, m-1]+room[j, m-1])/3
 
-        temp = self.__generate_walls()
+        walls=self.__generate_walls()
 
-        # special case
-        if (self.room_size, subroom_size) == (35, 7):
-            pass
+        for i in range(m):
+            for j in range(m):
+                if(walls[j, i]>room[j, i]):
+                    room[j, i]=walls[j, i]
+        
+        return room
 
-        pass
-
-
-    def simplex_method(self, subroom_size: int):
+    def simplex_method(self):
         """Generates random dirt based on simplex method
 
         Args:
@@ -108,67 +93,53 @@ class RoomGenerator:
             2d `np.array`        
         
         """
+        
+        m=self.room_size
+        room=np.zeros((m, m))
+        opensimplex.seed(1234)
+        for i in range(m):
+            for j in range(m):
+                random=np.random.randint(0, m*m)
+                if(opensimplex.noise2(x=random, y=random)<0):
+                    room[j, i]=opensimplex.noise2(x=random, y=random)+1
+                else: room[j, i]=opensimplex.noise2(x=random, y=random)
+        
+        walls=self.__generate_walls()
 
-        if subroom_size not in self.subroom_sizes:
-            raise NotImplementedError("A room with such subroom dimensions cannot be generated")
-        else:
-            m=self.room_size
-            room=np.zeros((m, m))
-            opensimplex.seed(1234)
-            for i in range(m):
-                for j in range(m):
-                    random=np.random.randint(0, m*m)
-                    if(opensimplex.noise2(x=random, y=random)<0):
-                        room[j, i]=opensimplex.noise2(x=random, y=random)+1
-                    else: room[j, i]=opensimplex.noise2(x=random, y=random)
-            
-            walls=self.__generate_walls()
+        for i in range(m):
+            for j in range(m):
+                if(walls[j, i]>room[j, i]):
+                    room[j, i]=walls[j, i]
+        
+        return room
 
-            for i in range(m):
-                for j in range(m):
-                    if(walls[j, i]>room[j, i]):
-                        room[j, i]=walls[j, i]
-            
-            return room
+    def perlin_method(self):
+        
+        m=self.room_size
+        noise1 = perlin_noise.PerlinNoise(octaves=4)
+        noise2 = perlin_noise.PerlinNoise(octaves=8)
+        noise3 = perlin_noise.PerlinNoise(octaves=16)
+        noise4 = perlin_noise.PerlinNoise(octaves=32)
+        room = np.zeros((m, m))
+        for i in range(m):
+            row = []
+            for j in range(m):
+                noise_val = noise1([i/m, j/m])
+                noise_val += 0.5 * noise2([i/m, j/m])
+                noise_val += 0.25 * noise3([i/m, j/m])
+                noise_val += 0.125 * noise4([i/m, j/m])
 
+                row.append(np.clip(noise_val, 0, 1))
+            room[i]=row
 
-        temp = self.__generate_walls()
+        walls=self.__generate_walls()
 
-        # special case
-        if (self.room_size, subroom_size) == (35, 7):
-            pass
-
-        pass
-
-    def perlin_method(self, subroom_size: int):
-        if subroom_size not in self.subroom_sizes:
-            raise NotImplementedError("A room with such subroom dimensions cannot be generated")
-        else:
-            m=self.room_size
-            noise1 = perlin_noise.PerlinNoise(octaves=4)
-            noise2 = perlin_noise.PerlinNoise(octaves=8)
-            noise3 = perlin_noise.PerlinNoise(octaves=16)
-            noise4 = perlin_noise.PerlinNoise(octaves=32)
-            room = np.zeros((m, m))
-            for i in range(m):
-                row = []
-                for j in range(m):
-                    noise_val = noise1([i/m, j/m])
-                    noise_val += 0.5 * noise2([i/m, j/m])
-                    noise_val += 0.25 * noise3([i/m, j/m])
-                    noise_val += 0.125 * noise4([i/m, j/m])
-
-                    row.append(abs(noise_val))
-                room[i]=row
-
-            walls=self.__generate_walls()
-
-            for i in range(m):
-                for j in range(m):
-                    if(walls[j, i]>room[j, i]):
-                        room[j, i]=walls[j, i]
-            
-            return room
+        for i in range(m):
+            for j in range(m):
+                if(walls[j, i]>room[j, i]):
+                    room[j, i]=walls[j, i]
+        
+        return room
 
     def __generate_walls(self):
         m=self.room_size
@@ -234,3 +205,4 @@ cmap.set_over((0, 0.8, 1)) # specific value for walls (value 2)
 plt.imshow(room, cmap=cmap, vmin=0, vmax=1)
 plt.axis('off')
 plt.show()
+
