@@ -67,8 +67,6 @@ class RoomMechanics:
             
         """
 
-        self.cleaned_dirt = 0
-
         # note the transposition
         new_room = 1 - self.room.T
         new_room[new_room <= -1] = 2
@@ -142,6 +140,9 @@ class RoomMechanics:
             See Readme for a more precise explanation. 
         """
         
+        # reset every move
+        self.cleaned_dirt = 0
+
         if_corrected_forwards, if_corrected_sides = False, False
 
         rect_front, rect_main, half, tilt = self.__create_pointing_forward(pos1, pos2)
