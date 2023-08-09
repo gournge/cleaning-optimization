@@ -67,13 +67,31 @@ class Agent:
         state = tf.convert_to_tensor([observation], dtype=tf.float32)
         actions = self.actor(state)
 
-        actions += tf.random.normal(shape=[self.n_actions],
-                                        mean=0.0, stddev=self.noise)
-        
+        noise = tf.random.normal(shape=[self.n_actions],
+                                 mean=0.0, stddev=self.noise)
+
+        # if output from tanh: - - -
+
         # actions are mainly between -1 and 1
         # we get them to (0, 2) and scale to (0, max_action)
 
-        actions = (1 + actions) * (self.max_action / 2)
+        # actions += noise
+        # actions = (1 + actions) * (self.max_action / 2)
+
+        # - - -
+
+        # if output from relu: - - -
+
+        actions += noise * self.max_action
+
+        # - - -
+
+        # if output from sigmoid: - - -
+
+        # actions += noise / 2
+        # actions *= self.max_action
+
+        # - - -
 
         actions = tf.clip_by_value(actions, self.min_action, self.max_action - 1)
 

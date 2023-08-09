@@ -30,6 +30,9 @@ class RoomMechanics:
 
         self.mounds = mounds
 
+        # reset every move
+        self.cleaned_dirt = 0
+
         # read the config file settings 
 
         config = configparser.ConfigParser()
@@ -137,6 +140,8 @@ class RoomMechanics:
             See Readme for a more precise explanation. 
         """
         
+        self.cleaned_dirt = 0
+
         if_corrected_forwards, if_corrected_sides = False, False
 
         rect_front, rect_main, half, tilt = self.__create_pointing_forward(pos1, pos2)
@@ -479,6 +484,14 @@ class RoomMechanics:
             - amount of dirt that has been lost (no space for it has been found)
 
         """
+
+        # all dirt has been moved to a mound
+        for mound in self.mounds:
+            for point in points_output:
+                dist_vec = np.array(mound) - point
+                if abs(dist_vec[0]) < 0.5 and abs(dist_vec[1]) < 0.5:
+                    self.cleaned_dirt += amount_of_dirt
+                    return 0
 
         capacity_rect_output = 0
         for point in points_output:

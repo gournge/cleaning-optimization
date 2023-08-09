@@ -4,6 +4,7 @@ import configparser
 
 import tensorflow as tf
 
+import datetime
 import os
 
 # supress Tensorflow warning (happens on WSL2)
@@ -27,9 +28,9 @@ def get_args():
     parser = argparse.ArgumentParser("Train the cleaning agent")
 
     parser.add_argument("--load_previous_models", type=str, default='True', choices=['True', 'False'], help="If there are any model weights inside predefined path, start training with them.")
-    parser.add_argument("--load_models_path", type=str, default="trained models/trained cleaning models/room35")
-    parser.add_argument("--save_models_path", type=str, default="trained models/trained cleaning models/room35")
-    parser.add_argument("--save_load_path_same", type=str, default='True', choices=['True', 'False'])
+    
+    default_path = "trained models/trained cleaning models/" +  str(datetime.date.today())
+    parser.add_argument("--load_models_path", type=str, default=default_path)
 
     parser.add_argument("--between_saves", type=int, default=10)
 
@@ -49,7 +50,7 @@ def get_args():
 
     parser.add_argument("--punish_clipping", type=float, default=5.0, help="How much do we subtract from a reward if a movement is clipped?")
 
-    parser.add_argument("--between_snapshots", type=int, default=10, help="How many episodes need to pass in order for the snapshot to appear after a full episode.\nSet to -1 if you don\'t want to see snapshots.")
+    parser.add_argument("--between_snapshots", type=int, default=-1, help="How many episodes need to pass in order for the snapshot to appear after a full episode.\nSet to -1 if you don\'t want to see snapshots.")
 
     args = parser.parse_args()
     
@@ -127,7 +128,7 @@ def train(opts):
             save_counter += 1
 
         if score > avg_score and (save_counter % opts.between_saves == 0):
-            saved_models_absolute_path = os.path.abspath(opts.save_models_path)
+            saved_models_absolute_path = os.path.abspath(opts.load_models_path)
             agent.save_models(saved_models_absolute_path)
             save_history(saved_models_absolute_path, score_history)
 

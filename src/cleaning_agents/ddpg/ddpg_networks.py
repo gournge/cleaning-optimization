@@ -25,7 +25,7 @@ class CriticNetwork(Model):
 
             self.flatten = layers.Flatten()
 
-            self.dense_1 = layers.Dense(units=200 + n_actions, activation='relu')
+            self.dense_1 = layers.Dense(units=200 + n_actions)
             self.dense_2 = layers.Dense(units=1, activation='relu')
 
         else:
