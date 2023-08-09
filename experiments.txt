@@ -22,10 +22,11 @@ Experiments
         - dense2: relu
 
     - command: 
-        python train_cleaning_ddpg.py --load_previous_models False --load_models_path experiments/id1 --num_moves 30 --num_episodes 2000 --replay_memory_size 1000 --batch_size 1000 --noise 0.3
+        python train_cleaning_ddpg.py --load_previous_models False --load_models_path experiments/id1 --num_moves 30 --num_episodes 2000 --replay_memory_size 1000 --batch_size 1000 --noise 0.3 --gpu 0
 
     - results:
-        -
+        - author interrupted around episode 600
+        - stuck in the corner :(  
 
 - id 2:
     - activation functions
@@ -37,7 +38,7 @@ Experiments
         python train_cleaning_ddpg.py --load_previous_models False --load_models_path experiments/id2 --num_moves 30 --num_episodes 2000 --replay_memory_size 1000 --batch_size 1000 --noise 0.5
 
     - results:
-        - local optimum :(
+        - stuck in the corner :(  
 
 - id 3:
     - activation functions
@@ -46,11 +47,66 @@ Experiments
         - dense2: relu
 
     - command: 
-        python train_cleaning_ddpg.py --load_previous_models False --load_models_path experiments/id3 --num_moves 30 --num_episodes 2000 --replay_memory_size 1000 --batch_size 1000 --noise 0.7
+        python train_cleaning_ddpg.py --load_previous_models False --load_models_path experiments/id3 --num_moves 30 --num_episodes 1000 --replay_memory_size 1000 --batch_size 1000 --noise 0.7 --gpu 1
    
     - results
+        - author interrupted around episode 600
+        - stuck in the corner :(  
         
-        
+- id 4:
+    - activation functions
+        - conv2d: relu
+        - dense1: None
+        - dense2: relu
 
+    - command: 
+        python train_cleaning_ddpg.py --load_previous_models False --load_models_path experiments/id4 --num_moves 10 --num_episodes 1000 --replay_memory_size 1000 --batch_size 1000 --noise 0.7 --gpu 0 --punish_clipping 0
+   
+    - results
+        - stuck in the corner :(
+
+- id 5:
+    - activation functions
+        - conv2d: relu
+        - dense1: None
+        - dense2: relu
+
+    - command: 
+        python train_cleaning_ddpg.py --load_previous_models False --load_models_path experiments/id5 --num_moves 40 --num_episodes 500 --replay_memory_size 1000 --batch_size 1000 --noise 0.4 --gpu 1 --punish_clipping 1
+   
+    - results
+        - stuck in the corner :(
+
+- id 6:
+    - activation functions
+        - conv2d: relu
+        - dense1: None
+        - dense2: relu
+
+    - maximum broom length: 12
+
+    - command: 
+        python train_cleaning_ddpg.py --load_previous_models False --load_models_path experiments/id6 --num_moves 10 --num_episodes 10000 --replay_memory_size 1000 --batch_size 1000 --noise 0.5 --gpu 0 --punish_clipping 10
+   
+    - results
+        - author interrupted
+        - immediately bad
+
+
+- id 7:
+    - dataset:
+        - only perlin noise
+
+    - activation functions
+        - conv2d: relu
+        - dense1: None
+        - dense2: relu
+
+    - maximum broom length: 18
+
+    - command: 
+        python train_cleaning_ddpg.py --load_previous_models False --load_models_path experiments/id7 --num_moves 10 --num_episodes 40000 --replay_memory_size 1000 --batch_size 1000 --noise 0.2 --gpu 1 --punish_clipping 0
+   
+    - results
 
 

@@ -82,7 +82,7 @@ class Agent:
 
         # if output from relu: - - -
 
-        actions += noise * self.max_action
+        actions += 2 * noise * self.max_action
 
         # - - -
 

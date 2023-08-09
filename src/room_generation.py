@@ -34,11 +34,14 @@ class RoomGenerator:
 
         """
 
-        i = np.random.randint(2)
-        if i == 0:
-            return self.average_pooling_method()
-        elif i == 1:
-            return self.perlin_method()
+        return self.perlin_method()
+
+
+        # i = np.random.randint(2)
+        # if i == 0:
+        #     return self.average_pooling_method()
+        # elif i == 1:
+        #     return self.perlin_method()
 
     def average_pooling_method(self):
         """Generates random dirt and averages it out. 

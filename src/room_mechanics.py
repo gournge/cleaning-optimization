@@ -125,7 +125,7 @@ class RoomMechanics:
             spillover_dirt : float
                 the amount of dirt that disappeared by accident (the alg couldn't have found space for it)
             collided : bool
-                `False` if the movement collided with a wall (had to be clipped) or was too short; `True` otherwise.
+                `True` if the movement collided with a wall (had to be clipped) or was too short; `False` otherwise.
 
             If `cleaned_dirt` is negative it means that an error occured inside the environment - it should be discarded.
 
