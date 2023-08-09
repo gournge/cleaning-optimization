@@ -30,6 +30,9 @@ class RoomMechanics:
 
         self.mounds = mounds
 
+        # changes context in different broom movements
+        self.cleaned_dirt = 0
+
         # read the config file settings 
 
         config = configparser.ConfigParser()
@@ -63,6 +66,8 @@ class RoomMechanics:
             - `colored_segments` (optional) - list of tuples of four numbers. tuples are of form `(x1, y1, x2, y2)`
             
         """
+
+        self.cleaned_dirt = 0
 
         # note the transposition
         new_room = 1 - self.room.T
@@ -189,10 +194,7 @@ class RoomMechanics:
             else: 
                 spillover_dirt += self.__distribute_dirt(residue_mass/2, output_points, points_redistribution)
 
-        # actual cleaning
-        cleaned_dirt = self.__dirt_to_mounds()
-
-        return cleaned_dirt, spillover_dirt, (if_corrected_forwards or if_corrected_sides)
+        return self.cleaned_dirt, spillover_dirt, (if_corrected_forwards or if_corrected_sides)
 
     def __inside_points(self, corners):
         """
@@ -480,6 +482,14 @@ class RoomMechanics:
 
         """
 
+        # all dirt has been moved to a mound
+        for mound in self.mounds:
+            for point in points_output:
+                dist_vec = np.array(mound) - point
+                if abs(dist_vec[0]) < 0.5 and abs(dist_vec[1]) < 0.5:
+                    self.cleaned_dirt += amount_of_dirt
+                    return 0
+
         capacity_rect_output = 0
         for point in points_output:
             x, y = point
@@ -532,26 +542,6 @@ class RoomMechanics:
 
         # if after redistribution there are any leftovers
         return amount_of_dirt
-
-    def __dirt_to_mounds(self):
-        """
-            Iterates through all mounds and deletes the dirt at their positions
-            
-            Returns
-            -------
-            deleted_dirt : float
-                How much dirt was erased from the grid
-
-        """
-
-        deleted_dirt = 0
-        for mound in self.mounds:
-            x, y = mound
-            val = self.room[x, y]
-            if val == 2: continue
-            self.room[x, y] = 0
-            deleted_dirt += val 
-        return deleted_dirt
 
     def is_valid(self, point):
         x, y = point

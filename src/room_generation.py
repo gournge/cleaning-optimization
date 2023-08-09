@@ -34,13 +34,11 @@ class RoomGenerator:
 
         """
 
-        i = np.random.randint(3)
+        i = np.random.randint(2)
         if i == 0:
-            return self.average_pooling_method()
-        elif i == 1:
-            return self.simplex_method()
-        elif i == 2:
             return self.perlin_method()
+        elif i == 1:
+            return self.average_pooling_method()
 
     def average_pooling_method(self):
         """Generates random dirt and averages it out. 
@@ -147,7 +145,6 @@ class RoomGenerator:
         prob=8
         if m==35 and subroom==6:
             prob=6
-        print(subroom)
         walls=np.zeros((m, m))
 
         for i in range (subroom, m, subroom):
@@ -158,24 +155,11 @@ class RoomGenerator:
                         if(random<5 and i+subroom-1<m):
                             walls[j, i+z+1]=2
                         elif(random>5 and j+subroom-1<m):
-                             walls[j+z+1, i]=2
+                            walls[j+z+1, i]=2
+
                         # if(i+subroom-1 <m and j+subroom-1<m):
                         #     walls[j, i+z]=2
                         #     walls[j+z, i]=2
                         #     walls[j+subroom, i+z]=2
                         #     walls[j+z, i+subroom]=2
-        print(walls)
         return walls
-
-
-        """Private method
-
-        Returns:
-            2d `np.array` with value 2 where walls should be  
-        
-        """
-
-        
-
-        pass
-
