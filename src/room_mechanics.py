@@ -184,6 +184,7 @@ class RoomMechanics:
         else:
             points_redistribution = points_main
 
+        # sometimes there is an error that it is empty
         if not points_redistribution:
             return -1, 0, True
 

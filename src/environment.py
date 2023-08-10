@@ -53,7 +53,7 @@ class CleaningEnv:
     def render(self, actions = None):
 
         if actions is None:
-            actions = [] if self.previous_actions else [('r', self.previous_action)]
+            actions = [] if self.previous_actions else list(('r', action) for action in self.previous_actions)
 
         self.room_mechanics.show_room(colored_segments=actions)
 
@@ -73,8 +73,10 @@ class CleaningEnv:
 
         cleaned_dirt, _, clipped = self.room_mechanics.move_broom((x1, y1), (x2, y2))
 
+        print("Clipped:", clipped)
+
         # error might have occured in the env
-        reward = (cleaned_dirt - self.punish_clipping * clipped) if cleaned_dirt > 0 else 0
+        reward = (cleaned_dirt - self.punish_clipping * clipped) if cleaned_dirt >= 0 else 0
 
         
 
