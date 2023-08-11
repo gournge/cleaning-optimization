@@ -69,12 +69,23 @@ class CleaningEnv:
                 - `Tensor` of size `(room_size, room_size, 3)`
         """
 
+        def too_close(broom1, broom2):
+            start_too_close = (abs(broom1[0] - broom2[0]) < 1) and (abs(broom1[1] - broom2[1]) < 1)
+            end_too_close   = (abs(broom1[2] - broom2[2]) < 1) and (abs(broom1[3] - broom2[3]) < 1)
+
+            return start_too_close and end_too_close
+
         x1, y1, x2, y2 = broom
 
         cleaned_dirt, _, clipped = self.room_mechanics.move_broom((x1, y1), (x2, y2))
 
         # error might have occured in the env
-        reward = (cleaned_dirt - self.punish_clipping * clipped) if cleaned_dirt >= 0 else 0
+        reward = (cleaned_dirt - self.punish_clipping * clipped) if cleaned_dirt >= 0 else None
+
+        if self.previous_actions and too_close(broom, self.previous_actions[-1]):
+            reward -= self.punish_clipping
+
+        self.previous_actions.append(broom)
 
         return reward, utility.preprocess(self.room_mechanics.room, self.room_mechanics.mounds)
     

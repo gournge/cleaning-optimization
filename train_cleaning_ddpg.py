@@ -69,7 +69,19 @@ def save_history(dir_name, sequence):
 
 def train(opts):
 
-    os.environ["CUDA_VISIBLE_DEVICES"] = str(opts.gpu)
+    # generic method
+    # os.environ["CUDA_VISIBLE_DEVICES"] = str(opts.gpu)
+
+    # tensorflow method
+    gpus = tf.config.experimental.list_physical_devices('GPU')
+    if gpus:
+        # Restrict TensorFlow to only use the first GPU
+        try:
+            tf.config.experimental.set_visible_devices(gpus[opts.gpu], 'GPU')
+        except RuntimeError as e:
+            # Visible devices must be set at program startup
+            print(e)
+
 
     env = CleaningEnv(opts.room_size, opts.punish_clipping, mounds_number=opts.mounds_number)
     print("Environment initialized")
@@ -114,7 +126,9 @@ def train(opts):
 
             reward, observation_ = env.act(action)
             
-            if reward == 0: continue
+            if reward is None: 
+                print("Error in the env")
+                continue
 
             score += reward
             agent.remember(observation, action, reward, observation_)

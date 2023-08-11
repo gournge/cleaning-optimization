@@ -82,14 +82,14 @@ class Agent:
 
         # if output from relu: - - -
 
-        actions += 2 * noise * self.max_action
+        # actions += noise * self.max_action
 
         # - - -
 
         # if output from sigmoid: - - -
 
-        # actions += noise / 2
-        # actions *= self.max_action
+        actions += noise
+        actions *= self.max_action
 
         # - - -
 

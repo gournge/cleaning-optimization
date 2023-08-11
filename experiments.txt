@@ -108,5 +108,61 @@ Experiments
         python train_cleaning_ddpg.py --load_previous_models False --load_models_path experiments/id7 --num_moves 10 --num_episodes 40000 --replay_memory_size 1000 --batch_size 1000 --noise 0.2 --gpu 1 --punish_clipping 0
    
     - results
+        - author interrupted
+        - immediately bad
 
+- id 8:
+    - dataset:
+        - only perlin noise
 
+    - activation functions
+        - conv2d: sigmoid
+        - dense1: None
+        - dense2: sigmoid
+
+    - maximum broom length: 24
+
+    - command: 
+        python train_cleaning_ddpg.py --load_previous_models False --load_models_path experiments/id8 --num_moves 10 --num_episodes 40000 --replay_memory_size 1000 --batch_size 1000 --noise 0.3 --gpu 0 --punish_clipping 0
+        (noise is actually the same as in id7; implementation changed)
+
+    - results
+        same moves
+
+- id 9:
+    - FIXED ENVIRONMENT
+
+    - dataset:
+        - only perlin noise
+
+    - activation functions
+        - conv2d: sigmoid
+        - dense1: None
+        - dense2: sigmoid
+
+    - maximum broom length: 24
+
+    - command: 
+        python train_cleaning_ddpg.py --load_previous_models False --load_models_path experiments/id9 --num_moves 15 --num_episodes 7000 --replay_memory_size 1000 --batch_size 64 --noise 0.15 --gpu 1 --punish_clipping 5 --actor_learning_rate 0.0001
+
+    - results
+        same moves
+
+- id 10:
+    - FIXED ENVIRONMENT
+
+    - dataset:
+        - only perlin noise
+
+    - activation functions
+        - conv2d: sigmoid
+        - dense1: None
+        - dense2: sigmoid
+
+    - maximum broom length: 24
+
+    - command: 
+        python train_cleaning_ddpg.py --load_previous_models False --load_models_path experiments/id10 --num_moves 15 --num_episodes 7000 --replay_memory_size 1000 --batch_size 64 --noise 0.3 --gpu 0 --punish_clipping 5 --actor_learning_rate 0.0001
+
+    - results
+        same moves 
