@@ -103,6 +103,7 @@ def train(opts):
     score_history = []
     
     if opts.load_previous_models == 'True':
+
         load_models_absolute_path = os.path.abspath(opts.load_models_path)
         agent.load_models(load_models_absolute_path)
         print("Weights and memory loaded successfuly.")
@@ -111,6 +112,10 @@ def train(opts):
             for line in f:
                 numerical_value = float(line)
                 score_history.append(numerical_value)
+    else:
+        proceed = input("\tBy using a specific directory where previously trained weights are you might overwrite them with completely new random ones. Do you wish to proceed? [y/n]")
+        if proceed == 'n': 
+            return 
 
     save_counter = 0
     for e in range(opts.num_episodes):
