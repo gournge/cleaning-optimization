@@ -4,12 +4,14 @@ from keras.optimizers import Adam
 from src.cleaning_agents.ddpg.ddpg_memory import ReplayBuffer
 from src.cleaning_agents.ddpg.ddpg_networks import ActorNetwork, CriticNetwork
 
+from numpy import random
+
 import os
 
 class Agent:
     def __init__(self, input_dims, n_actions, min_action = 0, max_action = 1, alpha=0.001, beta=0.002,
                  gamma=0.99, tau=0.005, max_size=1000000,
-                batch_size=64, noise=0.1, loaded = True):
+                batch_size=64, noise=0.1, prob_no_noise=0.2, loaded = True):
         
         self.noise = noise
         self.max_action = max_action
@@ -18,6 +20,7 @@ class Agent:
 
         self.gamma = gamma
         self.tau = tau
+        self.prob_no_noise = prob_no_noise
         self.memory = ReplayBuffer(max_size, input_dims, n_actions)
         self.batch_size = batch_size
         self.n_actions = n_actions
@@ -67,32 +70,24 @@ class Agent:
         state = tf.convert_to_tensor([observation], dtype=tf.float32)
         actions = self.actor(state)
 
-        noise = tf.random.normal(shape=[self.n_actions],
-                                 mean=0.0, stddev=self.noise)
+        if random.random() > self.prob_no_noise:
 
-        # if output from tanh: - - -
+            noise = tf.random.normal(shape=[self.n_actions],
+                                    mean=0.0, stddev=self.noise)
 
-        # actions are mainly between -1 and 1
-        # we get them to (0, 2) and scale to (0, max_action)
+            activation = self.actor.dense_2.activation
 
-        # actions += noise
-        # actions = (1 + actions) * (self.max_action / 2)
+            if activation == 'tanh':
+                actions += noise
+                actions = (1 + actions) / 2
 
-        # - - -
+            elif activation == 'relu':
+                actions += noise
 
-        # if output from relu: - - -
+            elif activation == 'sigmoid':
+                actions += noise
 
-        # actions += noise * self.max_action
-
-        # - - -
-
-        # if output from sigmoid: - - -
-
-        actions += noise
         actions *= self.max_action
-
-        # - - -
-
         actions = tf.clip_by_value(actions, self.min_action, self.max_action - 1)
 
         return actions[0]
