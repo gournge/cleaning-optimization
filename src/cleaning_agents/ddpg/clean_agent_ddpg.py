@@ -75,7 +75,7 @@ class Agent:
             noise = tf.random.normal(shape=[self.n_actions],
                                     mean=0.0, stddev=self.noise)
 
-            activation = self.actor.dense_2.activation
+            activation = self.actor.activation
 
             if activation == 'tanh':
                 actions += noise

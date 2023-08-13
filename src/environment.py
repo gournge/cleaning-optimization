@@ -83,6 +83,7 @@ class CleaningEnv:
         reward = (cleaned_dirt - self.punish_clipping * clipped) if cleaned_dirt >= 0 else None
 
         if self.previous_actions and too_close(broom, self.previous_actions[-1]):
+            print("Too close")
             reward -= self.punish_clipping
 
         self.previous_actions.append(broom)

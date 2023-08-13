@@ -5,10 +5,12 @@ from keras import Model
 
 
 class CriticNetwork(Model):
-    def __init__(self, state_shape, n_actions, name='critic'):
+    def __init__(self, state_shape, n_actions, activation='tanh', name='critic'):
         super(CriticNetwork, self).__init__()
 
         self.model_name = name
+
+        self.activation = activation
 
         self.conv2d_1 = None
         self.conv2d_2 = None 
@@ -19,14 +21,14 @@ class CriticNetwork(Model):
 
         if state_shape[0] == 35:
 
-            self.conv2d_1 = layers.Conv2D(filters=4,  kernel_size=15, strides=(2, 2), activation='tanh', input_shape = state_shape)
-            self.conv2d_2 = layers.Conv2D(filters=24, kernel_size=5,  activation='tanh')
-            self.conv2d_3 = layers.Conv2D(filters=36, kernel_size=3,  activation='tanh')
+            self.conv2d_1 = layers.Conv2D(filters=4,  kernel_size=15, strides=(2, 2), activation=self.activation, input_shape = state_shape)
+            self.conv2d_2 = layers.Conv2D(filters=24, kernel_size=5,  activation=self.activation)
+            self.conv2d_3 = layers.Conv2D(filters=36, kernel_size=3,  activation=self.activation)
 
             self.flatten = layers.Flatten()
 
             self.dense_1 = layers.Dense(units=200 + n_actions)
-            self.dense_2 = layers.Dense(units=1, activation='tanh')
+            self.dense_2 = layers.Dense(units=1, activation=self.activation)
 
         else:
             raise NotImplementedError("No corresponding model architecture has been implemented")
@@ -44,11 +46,13 @@ class CriticNetwork(Model):
         return self.dense_2(action_value)
 
 class ActorNetwork(Model):
-    def __init__(self, state_shape, n_actions, name='actor'):
+    def __init__(self, state_shape, n_actions, activation='tanh', name='actor'):
         super(ActorNetwork, self).__init__()
         self.n_actions = n_actions
 
         self.model_name = name
+
+        self.activation = activation
 
         self.conv2d_1 = None
         self.conv2d_2 = None 
@@ -59,14 +63,14 @@ class ActorNetwork(Model):
 
         if state_shape[0] == 35:
 
-            self.conv2d_1 = layers.Conv2D(filters=4,  kernel_size=15, strides=(2, 2), activation='tanh', input_shape = state_shape)
-            self.conv2d_2 = layers.Conv2D(filters=24, kernel_size=5,  activation='tanh')
-            self.conv2d_3 = layers.Conv2D(filters=36, kernel_size=3,  activation='tanh')
+            self.conv2d_1 = layers.Conv2D(filters=4,  kernel_size=15, strides=(2, 2), activation=self.activation, input_shape = state_shape)
+            self.conv2d_2 = layers.Conv2D(filters=24, kernel_size=5,  activation=self.activation)
+            self.conv2d_3 = layers.Conv2D(filters=36, kernel_size=3,  activation=self.activation)
 
             self.flatten = layers.Flatten()
 
             self.dense_1 = layers.Dense(units=200)
-            self.dense_2 = layers.Dense(units=n_actions, activation='tanh')
+            self.dense_2 = layers.Dense(units=n_actions, activation=self.activation)
         
         else:
             raise NotImplementedError("No corresponding model architecture has been implemented")

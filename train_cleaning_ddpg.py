@@ -43,8 +43,9 @@ def get_args():
     parser.add_argument("--room_size",     type=int, default=default_room_size, choices=possible_sizes, help="The common width and height for all images")
     parser.add_argument("--mounds_number", type=int, default=default_mounds_number,                     help="Amount of mounds")
     
-    parser.add_argument("--num_episodes", type=int, default=100)
-    parser.add_argument("--num_moves",    type=int, default=100, help="How many times does the algorithm generate a move")
+    parser.add_argument("--num_episodes",                      type=int, default=100)
+    parser.add_argument("--num_moves",                         type=int, default=15, help="How many times does the algorithm generate a move")
+    parser.add_argument("--expected_num_samples_from_episode", type=int, default=5,   help="On average, how many times per episode does the agent use the remember mechanism?")
     parser.add_argument("--batch_size",   type=int, default=64, help="The number of images per batch the agent replays.")
     parser.add_argument("--replay_memory_size", type=int, default=1000000, help="Number of epoches between testing phases")
 
@@ -113,7 +114,7 @@ def train(opts):
                 numerical_value = float(line)
                 score_history.append(numerical_value)
     else:
-        proceed = input("\tBy using a specific directory where previously trained weights are you might overwrite them with completely new random ones. Do you wish to proceed? [y/n]")
+        proceed = input("\tBy using a specific directory where previously trained weights are you might overwrite them with completely new random ones. Do you wish to proceed? [y/n] ")
         if proceed == 'n': 
             return 
 
@@ -136,7 +137,9 @@ def train(opts):
                 continue
 
             score += reward
-            agent.remember(observation, action, reward, observation_)
+
+            if np.random.random() < opts.expected_num_samples_from_episode / opts.num_moves:
+                agent.remember(observation, action, reward, observation_)
             agent.learn()
             observation = observation_
 

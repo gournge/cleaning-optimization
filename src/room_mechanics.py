@@ -195,6 +195,8 @@ class RoomMechanics:
             else: 
                 spillover_dirt += self.__distribute_dirt(residue_mass/2, output_points, points_redistribution)
 
+        print(front_mass, residue_mass, "Cleaned dirt:", self.cleaned_dirt)
+
         return self.cleaned_dirt, spillover_dirt, (if_corrected_forwards or if_corrected_sides)
 
     def __inside_points(self, corners):
