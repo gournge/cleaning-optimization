@@ -195,8 +195,6 @@ class RoomMechanics:
             else: 
                 spillover_dirt += self.__distribute_dirt(residue_mass/2, output_points, points_redistribution)
 
-        print(front_mass, residue_mass, "Cleaned dirt:", self.cleaned_dirt)
-
         return self.cleaned_dirt, spillover_dirt, (if_corrected_forwards or if_corrected_sides)
 
     def __inside_points(self, corners):
@@ -368,7 +366,7 @@ class RoomMechanics:
         """
         points = self.__inside_points(rect_main)
 
-        tot_mass, residue_mass = 0, 0
+        tot_mass, critical_mass = 0, 0
         exceeded_point = None
         for point in points:
             x, y = point
@@ -376,10 +374,14 @@ class RoomMechanics:
             if exceeded_point is not None: continue           
             if tot_mass > self.BROOM_CAPACITY:
                 exceeded_point = point
-                residue_mass = tot_mass
+                critical_mass = tot_mass
 
-        # residue mass is moved to front since it meets broom's capacity 
-        return exceeded_point, residue_mass, tot_mass - residue_mass, points
+        # all dirt was contained in one swoosh
+        if critical_mass == 0:
+            return None, tot_mass, 0, points
+
+        # critical mass is moved to front since it meets broom's capacity 
+        return exceeded_point, critical_mass, tot_mass - critical_mass, points
 
     def __create_pointing_sides(self, rect_main, half, tilt, exceeded_capacity_point):
         """
