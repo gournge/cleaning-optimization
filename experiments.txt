@@ -166,3 +166,62 @@ Experiments
 
     - results
         same moves 
+
+- id 11 
+    - git hash: dd853b6dfef93b131a3a280d53444d5fb79a5d16
+
+    - dataset:
+        - only perlin noise
+
+    - activation functions
+        - conv2d: tanh
+        - dense1: None
+        - dense2: tanh
+
+    - maximum broom length: 24
+
+    - command: 
+        python train_cleaning_ddpg.py --load_previous_models False --load_models_path experiments/id11 --num_moves 15 --num_episodes 7000 --replay_memory_size 1000 --batch_size 64 --noise 0.3 --gpu 0 --punish_clipping 5 --actor_learning_rate 0.0001
+
+    - results
+        same moves 
+
+- id 12:
+    - git hash: dd853b6dfef93b131a3a280d53444d5fb79a5d16
+
+    - dataset:
+        - only perlin noise
+
+    - activation functions
+        - conv2d: tanh
+        - dense1: None
+        - dense2: tanh
+
+    - maximum broom length: 24
+
+    - command: 
+        python train_cleaning_ddpg.py --load_previous_models False --load_models_path experiments/id12 --num_moves 10 --num_episodes 7000 --replay_memory_size 1000 --batch_size 64 --noise 0.3 --gpu 0 --punish_clipping 5 --actor_learning_rate 0.0001
+
+    - results
+        same moves 
+
+- id 13:
+    - git hash: dd853b6dfef93b131a3a280d53444d5fb79a5d16
+
+    - dataset:
+        - only perlin noise
+
+    - activation functions
+        - conv2d: tanh
+        - dense1: None
+        - dense2: tanh
+
+    - maximum broom length: 24
+
+    - command: 
+        python train_cleaning_ddpg.py --load_previous_models False --load_models_path experiments/id13 --num_moves 15 --num_episodes 7000 --replay_memory_size 1000 --batch_size 64 --noise 0.4 --gpu 0 --punish_clipping 5 --actor_learning_rate 0.0001
+
+    - results
+        same moves 
+
+

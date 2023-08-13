@@ -1,6 +1,6 @@
 from src import room_mechanics
 from src import room_generation
-from src import plan_mounds_naive
+from src import plan_mounds_random
 from src import utility
 
 import numpy as np
@@ -37,7 +37,7 @@ class CleaningEnv:
 
         self.room_mechanics = None
         if not isinstance(manual_mounds, np.ndarray):
-            mounds = plan_mounds_naive.plan_mounds_naive(room, mounds_number)
+            mounds = plan_mounds_random.plan_mounds_random(room, mounds_number)
             self.room_mechanics = room_mechanics.RoomMechanics(room=room, mounds=mounds)
         else:
             self.room_mechanics = room_mechanics.RoomMechanics(room, manual_mounds)

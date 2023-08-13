@@ -1,9 +1,8 @@
 import numpy as np
 import warnings
 
-def plan_mounds_naive(room: np.array, mounds_number: int) :
-    """Arranges mounds naively assuming that the densest dirt areas are optimal
-    
+def plan_mounds_random(room: np.array, mounds_number: int) :
+    """Arranges mounds randomly 
     Arguments:
     ---------
     - 2d `np.array`
@@ -13,8 +12,6 @@ def plan_mounds_naive(room: np.array, mounds_number: int) :
     -------
     - list of 2d positions of mounds
     """
-
-    warnings.warn("Planning mounds is random instead of naive")
 
     out = []
     d = room.shape[0]

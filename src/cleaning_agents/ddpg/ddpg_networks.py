@@ -19,14 +19,14 @@ class CriticNetwork(Model):
 
         if state_shape[0] == 35:
 
-            self.conv2d_1 = layers.Conv2D(filters=4,  kernel_size=15, strides=(2, 2), activation='sigmoid', input_shape = state_shape)
-            self.conv2d_2 = layers.Conv2D(filters=24, kernel_size=5,  activation='sigmoid')
-            self.conv2d_3 = layers.Conv2D(filters=36, kernel_size=3,  activation='sigmoid')
+            self.conv2d_1 = layers.Conv2D(filters=4,  kernel_size=15, strides=(2, 2), activation='tanh', input_shape = state_shape)
+            self.conv2d_2 = layers.Conv2D(filters=24, kernel_size=5,  activation='tanh')
+            self.conv2d_3 = layers.Conv2D(filters=36, kernel_size=3,  activation='tanh')
 
             self.flatten = layers.Flatten()
 
             self.dense_1 = layers.Dense(units=200 + n_actions)
-            self.dense_2 = layers.Dense(units=1, activation='sigmoid')
+            self.dense_2 = layers.Dense(units=1, activation='tanh')
 
         else:
             raise NotImplementedError("No corresponding model architecture has been implemented")
@@ -59,14 +59,14 @@ class ActorNetwork(Model):
 
         if state_shape[0] == 35:
 
-            self.conv2d_1 = layers.Conv2D(filters=4,  kernel_size=15, strides=(2, 2), activation='sigmoid', input_shape = state_shape)
-            self.conv2d_2 = layers.Conv2D(filters=24, kernel_size=5,  activation='sigmoid')
-            self.conv2d_3 = layers.Conv2D(filters=36, kernel_size=3,  activation='sigmoid')
+            self.conv2d_1 = layers.Conv2D(filters=4,  kernel_size=15, strides=(2, 2), activation='tanh', input_shape = state_shape)
+            self.conv2d_2 = layers.Conv2D(filters=24, kernel_size=5,  activation='tanh')
+            self.conv2d_3 = layers.Conv2D(filters=36, kernel_size=3,  activation='tanh')
 
             self.flatten = layers.Flatten()
 
             self.dense_1 = layers.Dense(units=200)
-            self.dense_2 = layers.Dense(units=n_actions, activation='sigmoid')
+            self.dense_2 = layers.Dense(units=n_actions, activation='tanh')
         
         else:
             raise NotImplementedError("No corresponding model architecture has been implemented")
