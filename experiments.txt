@@ -168,7 +168,7 @@ Experiments
         same moves 
 
 - id 11 
-    - git hash: dd853b6dfef93b131a3a280d53444d5fb79a5d16
+    - git hash: cbd4717577890bff6a9ff2f2f0227dfe957cacb1
 
     - dataset:
         - only perlin noise
@@ -187,7 +187,7 @@ Experiments
         same moves 
 
 - id 12:
-    - git hash: dd853b6dfef93b131a3a280d53444d5fb79a5d16
+    - git hash: cbd4717577890bff6a9ff2f2f0227dfe957cacb1
 
     - dataset:
         - only perlin noise
@@ -206,7 +206,7 @@ Experiments
         same moves 
 
 - id 13:
-    - git hash: dd853b6dfef93b131a3a280d53444d5fb79a5d16
+    - git hash: cbd4717577890bff6a9ff2f2f0227dfe957cacb1
 
     - dataset:
         - only perlin noise

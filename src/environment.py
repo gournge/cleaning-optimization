@@ -103,7 +103,7 @@ class CleaningEnv:
 
         final_mounds = None
         if mounds is None:
-            final_mounds = plan_mounds_naive.plan_mounds_naive(room, mounds_number)
+            final_mounds = plan_mounds_random.plan_mounds_random(room, mounds_number)
         else:
             final_mounds = mounds
 
