@@ -79,9 +79,10 @@ class Agent:
 
             if activation == 'tanh':
                 actions += noise
-                actions = (1 + actions) / 2
+                # on two sides extend by two standard deviations
+                actions = (1 + actions) / (2 + 2 * 2 * self.noise)
 
-            elif activation == 'relu':
+            elif activation == 'relu':  
                 actions += noise
 
             elif activation == 'sigmoid':
