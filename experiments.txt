@@ -167,8 +167,8 @@ Experiments
     - results
         same moves 
 
-- id 11 
-    - git hash: cbd4717577890bff6a9ff2f2f0227dfe957cacb1
+- id 11: in progress
+    - git hash: bcecd1d3826c33d292b9c5841acfc8251022a62e
 
     - dataset:
         - only perlin noise
@@ -184,9 +184,9 @@ Experiments
         python train_cleaning_ddpg.py --load_previous_models False --load_models_path experiments/id11 --num_moves 15 --num_episodes 7000 --replay_memory_size 1000 --batch_size 32 --noise 0.3 --gpu 0 --punish_clipping 5 --actor_learning_rate 0.0001
 
     - results
-        same moves 
+         
 
-- id 12:
+- id 12: in progress
     - git hash: cbd4717577890bff6a9ff2f2f0227dfe957cacb1
 
     - dataset:
@@ -203,9 +203,9 @@ Experiments
         python train_cleaning_ddpg.py --load_previous_models False --load_models_path experiments/id12 --num_moves 10 --num_episodes 7000 --replay_memory_size 1000 --batch_size 64 --noise 0.3 --gpu 0 --punish_clipping 5 --actor_learning_rate 0.0001
 
     - results
-        same moves 
+        
 
-- id 13:
+- id 13: in progress
     - git hash: cbd4717577890bff6a9ff2f2f0227dfe957cacb1
 
     - dataset:
@@ -222,6 +222,5 @@ Experiments
         python train_cleaning_ddpg.py --load_previous_models False --load_models_path experiments/id13 --num_moves 15 --num_episodes 7000 --replay_memory_size 1000 --batch_size 64 --noise 0.4 --gpu 0 --punish_clipping 5 --actor_learning_rate 0.0001
 
     - results
-        same moves 
-
+        
 
