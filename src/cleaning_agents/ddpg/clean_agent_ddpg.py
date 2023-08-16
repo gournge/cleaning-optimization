@@ -79,13 +79,18 @@ class Agent:
 
             if activation == 'tanh':
                 actions += noise
-                actions = (1 + actions) / 2
+                # on two sides extend by two standard deviations
+                stddevs = 2
+                actions = (1 + stddevs * self.noise + actions) / (2 + 2 * stddevs * self.noise)
 
-            elif activation == 'relu':
+            elif activation == 'relu':  
                 actions += noise
 
             elif activation == 'sigmoid':
                 actions += noise
+
+        for coord in actions[0]:
+            print(float(coord))
 
         actions *= self.max_action
         actions = tf.clip_by_value(actions, self.min_action, self.max_action - 1)
