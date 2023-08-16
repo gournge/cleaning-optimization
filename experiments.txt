@@ -200,8 +200,11 @@ Experiments
     - maximum broom length: 24
 
     - command: 
-        python train_cleaning_ddpg.py --load_previous_models False --load_models_path experiments/id11 --num_moves 15 --num_episodes 7000 --replay_memory_size 1000 --batch_size 32 --noise 0.3 --gpu 0 --punish_clipping 5 --actor_learning_rate 0.0001
+        python train_cleaning_ddpg.py --load_previous_models True --load_models_path experiments/id12 --num_moves 15 --num_episodes 7000 --replay_memory_size 1024 --batch_size 32 --noise 0.3 --gpu 0 --punish_clipping 2 --actor_learning_rate 0.0001 
 
     - results
+        surprisingly different; training continues.
+        still a little random.
 
-
+    - command 2:
+        python train_cleaning_ddpg.py --load_previous_models True --load_models_path experiments/id12 --num_moves 15 --num_episodes 20000 --replay_memory_size 1024 --batch_size 32 --noise 0.3 --gpu 0 --punish_clipping 2 --actor_learning_rate 0.0001 
