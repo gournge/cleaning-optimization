@@ -167,8 +167,27 @@ Experiments
     - results
         same moves 
 
-- id 11: in progress
-    - git hash: bcecd1d3826c33d292b9c5841acfc8251022a62e
+- id 11 
+    - git hash: 950d1f7de03f6c1f3cd81b0828fb90da2cc05292
+
+    - dataset:
+        - only perlin noise
+
+    - activation functions
+        - conv2d: tanh
+        - dense1: None
+        - dense2: tanh
+
+    - maximum broom length: 24
+
+    - command: 
+        python train_cleaning_ddpg.py --load_previous_models False --load_models_path experiments/id11 --num_moves 15 --num_episodes 7000 --replay_memory_size 512 --batch_size 32 --noise 0.3 --gpu 0 --punish_clipping 5 --actor_learning_rate 0.0001
+
+    - results
+        same moves
+
+- id 12 
+    - git hash: 950d1f7de03f6c1f3cd81b0828fb90da2cc05292
 
     - dataset:
         - only perlin noise
@@ -184,43 +203,5 @@ Experiments
         python train_cleaning_ddpg.py --load_previous_models False --load_models_path experiments/id11 --num_moves 15 --num_episodes 7000 --replay_memory_size 1000 --batch_size 32 --noise 0.3 --gpu 0 --punish_clipping 5 --actor_learning_rate 0.0001
 
     - results
-         
 
-- id 12: in progress
-    - git hash: cbd4717577890bff6a9ff2f2f0227dfe957cacb1
-
-    - dataset:
-        - only perlin noise
-
-    - activation functions
-        - conv2d: tanh
-        - dense1: None
-        - dense2: tanh
-
-    - maximum broom length: 24
-
-    - command: 
-        python train_cleaning_ddpg.py --load_previous_models False --load_models_path experiments/id12 --num_moves 10 --num_episodes 7000 --replay_memory_size 1000 --batch_size 64 --noise 0.3 --gpu 0 --punish_clipping 5 --actor_learning_rate 0.0001
-
-    - results
-        
-
-- id 13: in progress
-    - git hash: cbd4717577890bff6a9ff2f2f0227dfe957cacb1
-
-    - dataset:
-        - only perlin noise
-
-    - activation functions
-        - conv2d: tanh
-        - dense1: None
-        - dense2: tanh
-
-    - maximum broom length: 24
-
-    - command: 
-        python train_cleaning_ddpg.py --load_previous_models False --load_models_path experiments/id13 --num_moves 15 --num_episodes 7000 --replay_memory_size 1000 --batch_size 64 --noise 0.4 --gpu 0 --punish_clipping 5 --actor_learning_rate 0.0001
-
-    - results
-        
 
