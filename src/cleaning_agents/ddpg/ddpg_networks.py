@@ -75,15 +75,21 @@ class ActorNetwork(Model):
         else:
             raise NotImplementedError("No corresponding model architecture has been implemented")
 
-    def call(self, state):
+    def call(self, state, prev_layer_output = False):
 
-        prob = self.conv2d_1(state)
-        prob = self.conv2d_2(prob)
-        prob = self.conv2d_3(prob)
+        values = self.conv2d_1(state)
+        values = self.conv2d_2(values)
+        values = self.conv2d_3(values)
 
-        prob = self.flatten(prob)
+        values = self.flatten(values)
 
-        prob = self.dense_1(prob)
-        prob = self.dense_2(prob)
+        prev_values = None
+        values = self.dense_1(values)
+        if prev_layer_output:
+            prev_values = values
+        values = self.dense_2(values)
 
-        return prob
+        if prev_layer_output:
+            return values, prev_values
+
+        return values

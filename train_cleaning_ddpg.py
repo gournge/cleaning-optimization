@@ -97,7 +97,7 @@ def train(opts):
                    alpha = opts.actor_learning_rate,
                    beta  = opts.critic_learning_rate,
                    noise = opts.noise,
-                   loaded = opts.load_previous_models
+                   loaded = opts.load_previous_models == 'True'
                  )
     print("Agent initialized")
 

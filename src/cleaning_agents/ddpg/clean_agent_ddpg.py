@@ -10,7 +10,7 @@ import os
 
 class Agent:
     def __init__(self, input_dims, n_actions, min_action = 0, max_action = 1, alpha=0.001, beta=0.002,
-                 gamma=0.99, tau=0.005, max_size=1000000,
+                 gamma=0.99, tau=0.005, max_size=10000,
                 batch_size=64, noise=0.1, prob_no_noise=0.2, loaded = True):
         
         self.noise = noise
@@ -65,10 +65,15 @@ class Agent:
     def remember(self, state, action, reward, new_state):
         self.memory.store_transition(state, action, reward, new_state)
 
-    def choose_action(self, observation):
+    def choose_action(self, observation, prev_layer_output = False):
         
         state = tf.convert_to_tensor([observation], dtype=tf.float32)
-        actions = self.actor(state)
+
+        actions, prev_output = None, None
+        if prev_layer_output:
+            actions, prev_output = self.actor(state, prev_layer_output = True)
+        else:
+            actions = self.actor(state)
 
         if random.random() > self.prob_no_noise:
 
@@ -89,11 +94,11 @@ class Agent:
             elif activation == 'sigmoid':
                 actions += noise
 
-        for coord in actions[0]:
-            print(float(coord))
-
         actions *= self.max_action
         actions = tf.clip_by_value(actions, self.min_action, self.max_action - 1)
+
+        if prev_layer_output:
+            return actions[0], prev_output[0]
 
         return actions[0]
 
