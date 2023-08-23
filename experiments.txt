@@ -249,3 +249,26 @@ Experiments
 
     - results
         couldnt reproduce id 12, still random
+
+- id 15
+
+    - notes:
+        - continue with results from id 12; higher num episodes
+
+    - git hash: f7b51c0e30a548ece73f7f573bc2db56a6c5ca7e
+
+    - dataset:
+        - only perlin noise
+
+    - activation functions
+        - conv2d: tanh
+        - dense1: None
+        - dense2: tanh
+
+    - maximum broom length: 24
+
+    - command: 
+        python train_cleaning_ddpg.py --load_previous_models False --load_models_path experiments/id15 --num_moves 15 --num_episodes 10000 --replay_memory_size 1024 --batch_size 32 --noise 0.3 --gpu 0 --punish_clipping 2 --actor_learning_rate 0.0001 
+
+    - results
+        couldnt reproduce id 12, still random
