@@ -65,8 +65,9 @@ class CleaningEnv:
             
             Returns:
             ------
-                - `reward`
+                - `reward` (`None` means error) 
                 - `Tensor` of size `(room_size, room_size, 3)`
+
         """
 
         def too_close(broom1, broom2):
@@ -79,8 +80,11 @@ class CleaningEnv:
 
         cleaned_dirt, _, clipped = self.room_mechanics.move_broom((x1, y1), (x2, y2))
 
+        if cleaned_dirt < 0:
+            return None, None
+
         # error might have occured in the env
-        reward = (cleaned_dirt - self.punish_clipping * clipped) if cleaned_dirt >= 0 else None
+        reward = (cleaned_dirt - self.punish_clipping * clipped) 
 
         if self.previous_actions and too_close(broom, self.previous_actions[-1]):
             reward -= self.punish_clipping

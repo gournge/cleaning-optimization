@@ -29,6 +29,8 @@ def plot(opts):
             value = float(line.strip())
             values.append(value)
 
+    values = values[:702]
+
     episodes = np.arange(len(values))
 
     plt.rcParams.update({'font.size': opts.font_size})
