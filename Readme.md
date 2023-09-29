@@ -2,7 +2,7 @@
 
 This is a project conducted by Filip Morawiec and Wojciech Siostrzonek under the supervision of Politechnika Śląska.
 
-[Here](posters/poster%20polish.pdf) is the original 22.09.2023 conference poster (polish) and [here]() is the english version.
+[Here](posters/poster%20polish.pdf) is the original 22.09.2023 conference poster (polish) and [here](posters/poster%20english.pdf) is the english version.
 
 <!-- ## Results discussion -->
 
